@@ -2265,11 +2265,23 @@ document.querySelector(".logo").onclick=()=>{
   function startQuiz() {
     quizScoreTotals = [0, 0, 0, 0];
     quizStep = 0;
+
+    // Hide result panel immediately and reset its animated children
+    const res = document.getElementById('quiz-result');
+    res.classList.remove('show');
+    res.style.display = 'none';
+
+    // Force-reset child animations so they replay when result shows again
+    res.querySelectorAll('[style*="animation"], .quiz-result-emoji, .quiz-match-badge, .quiz-result-title, .quiz-result-genre, .quiz-result-desc, #quiz-book-recommendation, .quiz-restart-btn').forEach(el => {
+      el.style.animation = 'none';
+      void el.offsetWidth; // reflow
+      el.style.animation = '';
+    });
+
     const slide = document.getElementById('quiz-slide');
     slide.classList.remove('exiting', 'entering', 'no-transition');
     slide.style.display = '';
     document.getElementById('quiz-progress-wrap').style.display = '';
-    document.getElementById('quiz-result').classList.remove('show');
     renderQuizStep();
   }
 
@@ -2342,6 +2354,7 @@ document.querySelector(".logo").onclick=()=>{
     document.getElementById('quiz-progress-wrap').style.display = 'none';
 
     const res = document.getElementById('quiz-result');
+    res.style.display = '';   // ensure it's not hidden from a previous startQuiz reset
     res.style.setProperty('--result-color', r.color);
     document.getElementById('qr-emoji').textContent = r.emoji;
     document.getElementById('qr-match').textContent = `✨ ${matchPct}% Match`;
