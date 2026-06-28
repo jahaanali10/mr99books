@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Books | Mr99Books</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1A1B2E; --cream:#F5EDD6; --ochre:#C9973A;
+  --rust:#D4533A; --white:#FAFAF7; --grey:#6B6B7B; --light:#EDE5CE;
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+
+body{
+  background:
+    linear-gradient(90deg, rgba(26,27,46,.035) 1px, transparent 1px) 0 0/34px 34px,
+    linear-gradient(0deg, rgba(26,27,46,.025) 1px, transparent 1px) 0 0/34px 34px,
+    radial-gradient(circle at 10% 8%, rgba(201,151,58,.13), transparent 28%),
+    radial-gradient(circle at 92% 18%, rgba(212,83,58,.08), transparent 26%),
+    var(--cream);
+  font-family:'DM Sans',sans-serif;
+  color:var(--navy);
+  overflow-x:hidden;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background:linear-gradient(120deg, rgba(255,255,255,.2), transparent 34%, rgba(201,151,58,.07));
+}
+a{ text-decoration:none; }
+.scroll-progress{
+  position:fixed;
+  top:0; left:0;
+  width:0; height:3px;
+  background:linear-gradient(90deg,var(--ochre),var(--rust));
+  z-index:500;
+  box-shadow:0 0 16px rgba(201,151,58,.55);
+  transition:width .08s linear;
+}
+
+/* ── NAV ── */
+nav{
+  background:var(--navy);
+  position:sticky; top:0; z-index:100;
+  padding:0 5%;
+  display:flex; justify-content:space-between; align-items:center;
+  height:64px;
+  box-shadow:0 2px 20px rgba(0,0,0,0.3);
+  animation:navDrop .65s ease both;
+}
+nav::after{
+  content:'';
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(201,151,58,.75),transparent);
+}
+@keyframes navDrop{
+  from{ opacity:0; transform:translateY(-100%); }
+  to{ opacity:1; transform:translateY(0); }
+}
+.logo{
+  font-family:'Playfair Display',serif;
+  font-size:1.6rem; font-weight:900; color:var(--cream);
+  letter-spacing:-0.5px;
+  transition:opacity .2s, transform .2s;
+}
+.logo:hover{ opacity:.9; transform:translateY(-1px); }
+.logo span{ color:var(--ochre); }
+.nav-right{ display:flex; align-items:center; gap:24px; }
+.back-btn{ color:#aaa; font-size:0.875rem; font-weight:500; transition:color .2s, transform .2s; }
+.back-btn:hover{ color:var(--cream); transform:translateY(-1px); }
+#cart-btn{
+  background:var(--ochre); color:var(--navy); border:none;
+  padding:8px 18px; border-radius:2px;
+  font-family:'DM Sans',sans-serif; font-weight:600; font-size:0.875rem;
+  cursor:pointer; display:flex; align-items:center; gap:8px;
+  transition:background .2s, transform .15s;
+  position:relative; overflow:hidden;
+}
+#cart-btn::before{
+  content:'';
+  position:absolute; inset:-2px;
+  background:linear-gradient(110deg,transparent 0 35%,rgba(255,255,255,.35) 50%,transparent 65% 100%);
+  transform:translateX(-120%);
+  transition:transform .5s ease;
+}
+#cart-btn:hover::before{ transform:translateX(120%); }
+#cart-btn:hover{ background:#dba93f; transform:scale(1.04); }
+#cart-count{
+  background:var(--rust); color:white; font-size:0.7rem; font-weight:700;
+  width:18px; height:18px; border-radius:50%;
+  display:none; align-items:center; justify-content:center;
+  animation:popIn .3s cubic-bezier(.175,.885,.32,1.275);
+}
+#cart-count.visible{ display:flex; }
+@keyframes popIn{ from{transform:scale(0)} to{transform:scale(1)} }
+
+/* ── HERO HEADER ── */
+.page-header{
+  text-align:center;
+  padding:88px 20px 52px;
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+}
+.page-header::before{
+  content:'';
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(201,151,58,0.16) 0%, transparent 68%),
+    linear-gradient(180deg, rgba(250,250,247,.36), transparent 60%);
+  pointer-events:none;
+}
+.page-header::after{
+  content:'';
+  position:absolute;
+  left:5%; right:5%; bottom:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(26,27,46,.16),transparent);
+  pointer-events:none;
+}
+.header-eyebrow{
+  font-size:0.75rem; font-weight:700; letter-spacing:3px;
+  text-transform:uppercase; color:var(--ochre);
+  margin-bottom:14px;
+  opacity:0; animation:fadeUp .6s .1s forwards;
+}
+.page-header h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.2rem, 5vw, 4rem);
+  line-height:1.1; margin-bottom:16px;
+  opacity:0; animation:fadeUp .6s .2s forwards;
+}
+.page-header h1 em{
+  font-style:italic;
+  color:transparent;
+  background:linear-gradient(90deg,var(--ochre),#f0c864,var(--ochre));
+  -webkit-background-clip:text;
+  background-clip:text;
+  background-size:180% 100%;
+  animation:goldSweep 4s ease-in-out infinite;
+}
+@keyframes goldSweep{
+  0%,100%{ background-position:0% 50%; }
+  50%{ background-position:100% 50%; }
+}
+.page-header p{
+  color:var(--grey); font-size:1rem; max-width:500px; margin:0 auto;
+  opacity:0; animation:fadeUp .6s .3s forwards;
+}
+.header-stats{
+  display:flex; justify-content:center; gap:40px; margin-top:32px;
+  opacity:0; animation:fadeUp .6s .4s forwards;
+}
+.stat{
+  text-align:center;
+  padding:12px 18px;
+  border-radius:6px;
+  background:rgba(250,250,247,.35);
+  box-shadow:inset 0 0 0 1px rgba(26,27,46,.06);
+  transition:transform .25s, box-shadow .25s;
+}
+.stat:hover{ transform:translateY(-4px); box-shadow:0 14px 30px rgba(26,27,46,.1); }
+.stat-num{
+  font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:900;
+  color:var(--navy); line-height:1;
+}
+.stat-label{ font-size:0.7rem; color:var(--grey); font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-top:4px; }
+
+@keyframes fadeUp{
+  from{ opacity:0; transform:translateY(20px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+/* ── SEARCH & FILTERS ── */
+.controls{
+  max-width:980px; margin:0 auto 44px; padding:0 20px;
+  opacity:0; animation:fadeUp .6s .5s forwards;
+}
+.search-bar{
+  position:relative; margin-bottom:20px;
+  filter:drop-shadow(0 14px 24px rgba(26,27,46,.08));
+}
+.search-icon{
+  position:absolute; left:18px; top:50%; transform:translateY(-50%);
+  font-size:1rem; pointer-events:none; opacity:0.5;
+}
+#searchInput{
+  width:100%; padding:16px 20px 16px 48px;
+  border:2px solid #d8cfb5; border-radius:50px;
+  background:var(--white); font-family:'DM Sans',sans-serif;
+  font-size:1rem; outline:none; transition:border-color .2s, box-shadow .2s, transform .2s;
+  box-shadow:0 2px 12px rgba(0,0,0,0.05);
+}
+#searchInput:focus{
+  border-color:var(--ochre);
+  box-shadow:0 6px 26px rgba(201,151,58,0.18);
+  transform:translateY(-1px);
+}
+
+/* Genre filter pills */
+.filter-row{
+  display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+}
+.filter-pill{
+  padding:7px 16px; border-radius:50px;
+  border:1.5px solid #d0c8b0; background:transparent;
+  font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:600;
+  cursor:pointer; color:var(--grey); transition:all .2s;
+  letter-spacing:0.3px;
+  position:relative; overflow:hidden;
+}
+.filter-pill::after{
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(110deg,transparent 0 35%,rgba(255,255,255,.36) 50%,transparent 65% 100%);
+  transform:translateX(-120%);
+  transition:transform .42s ease;
+}
+.filter-pill:hover::after{ transform:translateX(120%); }
+.filter-pill:hover{ border-color:var(--ochre); color:var(--ochre); transform:translateY(-2px); }
+.filter-pill.active{
+  background:var(--navy); border-color:var(--navy);
+  color:var(--cream);
+  box-shadow:0 8px 20px rgba(26,27,46,.16);
+}
+
+.result-count{
+  text-align:center; margin-top:16px;
+  color:var(--grey); font-size:.85rem;
+}
+.result-count strong{ color:var(--navy); }
+
+/* ── BOOKS GRID ── */
+.books-grid{
+  padding:0 5% 80px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:26px;
+  perspective:1100px;
+}
+
+/* Card entrance animation */
+.book-card{
+  background:var(--white); border-radius:8px; overflow:hidden;
+  display:flex; flex-direction:column;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s, border-color .3s;
+  opacity:0;
+  animation:cardIn .5s forwards;
+  position:relative;
+  border:1px solid rgba(26,27,46,.07);
+  box-shadow:0 8px 22px rgba(26,27,46,.055);
+  will-change:transform;
+}
+@keyframes cardIn{
+  from{ opacity:0; transform:translateY(24px) scale(0.97); }
+  to{ opacity:1; transform:translateY(0) scale(1); }
+}
+.book-card:hover{
+  transform:translateY(-6px) scale(1.01);
+  box-shadow:0 22px 48px rgba(26,27,46,0.17);
+  border-color:rgba(201,151,58,.45);
+}
+.book-card::after{
+  content:''; position:absolute; inset:0; border-radius:8px;
+  box-shadow:inset 0 0 0 1.5px rgba(201,151,58,0);
+  transition:box-shadow .3s; pointer-events:none;
+}
+.book-card:hover::after{
+  box-shadow:inset 0 0 0 1.5px rgba(201,151,58,0.4);
+}
+.book-card::before{
+  content:'';
+  position:absolute;
+  inset:auto 16px -14px;
+  height:22px;
+  background:rgba(26,27,46,.18);
+  filter:blur(14px);
+  opacity:0;
+  transition:opacity .3s;
+  pointer-events:none;
+}
+.book-card:hover::before{ opacity:1; }
+
+/* Cover */
+.book-cover-link{
+  display:block; position:relative;
+  text-decoration:none; color:inherit;
+}
+.book-cover{
+  aspect-ratio:2/3; position:relative; overflow:hidden;
+}
+.book-cover img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  transition:transform .5s cubic-bezier(.2,.8,.2,1);
+}
+.book-card:hover .book-cover img{ transform:scale(1.08); }
+.book-cover::after{
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(105deg,transparent 0 38%,rgba(255,255,255,.36) 48%,transparent 58% 100%);
+  transform:translateX(-130%);
+  transition:transform .7s ease;
+  pointer-events:none;
+}
+.book-card:hover .book-cover::after{ transform:translateX(130%); }
+
+.book-cover-overlay{
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(26,27,46,0.85) 0%, rgba(26,27,46,0.2) 50%, transparent 100%);
+  display:flex; align-items:flex-end; justify-content:center;
+  padding-bottom:16px;
+  opacity:0; transition:opacity .3s;
+}
+.book-card:hover .book-cover-overlay{ opacity:1; }
+.overlay-view-btn{
+  background:var(--cream); color:var(--navy);
+  font-family:'DM Sans',sans-serif; font-weight:700;
+  font-size:0.75rem; letter-spacing:0.5px;
+  padding:8px 20px; border-radius:50px;
+  transform:translateY(8px); transition:transform .3s;
+}
+.book-card:hover .overlay-view-btn{ transform:translateY(0); }
+
+.price-stamp{
+  position:absolute; top:12px; right:12px;
+  background:var(--ochre); color:var(--navy);
+  padding:4px 10px; font-weight:700; font-size:0.82rem;
+  border-radius:4px; z-index:2;
+  box-shadow:0 2px 8px rgba(0,0,0,0.25);
+  letter-spacing:0.5px;
+  animation:stampPop .45s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes stampPop{
+  from{ opacity:0; transform:rotate(-8deg) scale(.84); }
+  to{ opacity:1; transform:rotate(2deg) scale(1); }
+}
+
+/* Book info */
+.book-info{
+  padding:14px 14px 16px;
+  display:flex; flex-direction:column; flex:1;
+}
+.book-title{
+  font-family:'Playfair Display',serif; font-weight:700;
+  font-size:0.93rem; line-height:1.3; margin-bottom:4px; color:var(--navy);
+}
+.book-author{ color:var(--grey); font-size:.72rem; margin-bottom:8px; }
+.book-genre-tag{
+  display:inline-block; margin-bottom:8px;
+  background:rgba(201,151,58,.12); color:var(--ochre);
+  padding:3px 8px; font-size:.62rem;
+  text-transform:uppercase; font-weight:700;
+  letter-spacing:1px; border-radius:50px;
+  box-shadow:inset 0 0 0 1px rgba(201,151,58,.12);
+}
+.book-condition{
+  font-size:0.68rem; color:var(--grey); margin-bottom:12px;
+  display:flex; align-items:center; gap:5px;
+}
+.condition-dot{
+  width:6px; height:6px; border-radius:50%; background:var(--ochre); flex-shrink:0;
+}
+.condition-dot.vg{ background:#2a7a2a; }
+
+.add-to-cart-btn{
+  margin-top:auto; width:100%;
+  background:var(--navy); color:var(--cream);
+  border:none; padding:11px;
+  font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:600;
+  cursor:pointer; border-radius:4px;
+  transition:background .2s, transform .15s;
+  letter-spacing:0.3px;
+  position:relative; overflow:hidden;
+}
+.add-to-cart-btn::before{
+  content:'';
+  position:absolute; top:50%; left:50%;
+  width:0; height:0; border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  transform:translate(-50%,-50%);
+  transition:width .4s, height .4s;
+}
+.add-to-cart-btn::after{
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(110deg,transparent 0 36%,rgba(255,255,255,.18) 50%,transparent 64% 100%);
+  transform:translateX(-120%);
+  transition:transform .45s ease;
+}
+.add-to-cart-btn:hover::after{ transform:translateX(120%); }
+.add-to-cart-btn:active::before{ width:200px; height:200px; }
+.add-to-cart-btn:hover{ background:var(--rust); transform:scale(1.02); }
+.add-to-cart-btn.added{ background:#2a7a2a; }
+
+/* No results */
+.no-results{
+  text-align:center; padding:80px 20px; color:var(--grey);
+  grid-column:1/-1;
+}
+.no-results-icon{ font-size:3rem; margin-bottom:12px; }
+.no-results h3{ font-family:'Playfair Display',serif; margin-bottom:8px; color:var(--navy); }
+
+/* ── CART DRAWER ── */
+.cart-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,0.5);
+  z-index:200; opacity:0; pointer-events:none; transition:opacity .25s;
+  backdrop-filter:blur(2px);
+}
+.cart-overlay.open{ opacity:1; pointer-events:all; }
+.cart-drawer{
+  position:fixed; top:0; right:0; bottom:0; width:390px; max-width:95vw;
+  background:var(--white); z-index:201;
+  transform:translateX(110%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  display:flex; flex-direction:column;
+  box-shadow:-8px 0 40px rgba(0,0,0,0.15);
+}
+.cart-drawer.open{ transform:translateX(0); }
+.cart-drawer.open{ animation:drawerSettle .42s ease both; }
+@keyframes drawerSettle{
+  0%{ transform:translateX(100%); }
+  72%{ transform:translateX(-10px); }
+  100%{ transform:translateX(0); }
+}
+.cart-header{
+  background:var(--navy); color:var(--cream);
+  padding:22px 24px; display:flex; align-items:center; justify-content:space-between;
+}
+.cart-header h3{ font-family:'Playfair Display',serif; font-size:1.3rem; }
+#close-cart{
+  background:none; border:none; color:var(--cream);
+  font-size:1.5rem; cursor:pointer; line-height:1;
+  transition:opacity .2s;
+}
+#close-cart:hover{ opacity:0.85; transform:rotate(90deg); }
+.cart-items{ flex:1; overflow-y:auto; padding:20px 24px; }
+.cart-empty{ text-align:center; padding:60px 0; color:var(--grey); }
+.cart-empty .empty-icon{ font-size:3rem; margin-bottom:12px; }
+.cart-empty p{ font-size:.9rem; }
+.cart-item{
+  display:flex; gap:14px; padding:16px 0;
+  border-bottom:1px solid #e8e0cc;
+  animation:fadeUp .3s forwards;
+}
+.cart-item-cover{
+  width:46px; height:66px; border-radius:3px;
+  flex-shrink:0; overflow:hidden; background:#ddd;
+}
+.cart-item-cover img{ width:100%; height:100%; object-fit:cover; }
+.cart-item-info{ flex:1; }
+.cart-item-title{
+  font-family:'Playfair Display',serif; font-size:.88rem; font-weight:700; margin-bottom:2px;
+}
+.cart-item-author{ font-size:.72rem; color:var(--grey); margin-bottom:8px; }
+.cart-item-controls{ display:flex; align-items:center; gap:10px; }
+.qty-btn{
+  width:26px; height:26px; border:1.5px solid #ccc;
+  background:none; border-radius:4px; cursor:pointer;
+  font-size:1rem; display:flex; align-items:center; justify-content:center;
+  transition:all .15s;
+}
+.qty-btn:hover{ border-color:var(--navy); background:var(--navy); color:var(--cream); }
+.qty-num{ font-weight:700; font-size:.85rem; min-width:20px; text-align:center; }
+.cart-item-price{ font-weight:700; font-size:.95rem; color:var(--ochre); align-self:center; flex-shrink:0; }
+.remove-item{
+  background:none; border:none; color:#ccc; cursor:pointer;
+  font-size:1rem; transition:color .15s, transform .15s;
+}
+.remove-item:hover{ color:var(--rust); transform:scale(1.18) rotate(-8deg); }
+
+/* ── CART ITEM DELETE ANIMATION ── */
+.cart-item{ transform-origin: right center; }
+.cart-item.removing{
+  animation: cartItemSlideOut .32s cubic-bezier(.4,0,.6,1) forwards;
+  pointer-events: none;
+}
+@keyframes cartItemSlideOut{
+  0%   { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+  100% { opacity: 0; transform: translateX(60px) scale(.92); filter: blur(2px); }
+}
+.cart-item.collapsing{
+  transition: height .28s ease, padding .28s ease, margin .28s ease,
+              border-color .28s ease, opacity .28s ease;
+  height: 0 !important;
+  padding-top: 0 !important; padding-bottom: 0 !important;
+  margin: 0 !important;
+  border-color: transparent !important;
+  opacity: 0 !important;
+}
+.cart-footer{
+  padding:20px 24px; border-top:1px solid #e8e0cc; background:var(--white);
+}
+.cart-total-row{
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;
+}
+.cart-total-label{ font-size:.85rem; color:var(--grey); }
+.cart-total-amount{
+  font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--navy);
+}
+.cart-savings{ font-size:.78rem; color:#2a7a2a; font-weight:600; margin-bottom:16px; }
+.checkout-btn{
+  width:100%; background:var(--rust); color:white; border:none; padding:15px;
+  font-family:'DM Sans',sans-serif; font-size:.95rem; font-weight:700;
+  cursor:pointer; border-radius:4px; transition:background .2s, transform .15s;
+  letter-spacing:0.3px;
+  position:relative; overflow:hidden;
+}
+.checkout-btn::after{
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(110deg,transparent 0 36%,rgba(255,255,255,.2) 50%,transparent 64% 100%);
+  transform:translateX(-120%);
+  transition:transform .45s ease;
+}
+.checkout-btn:hover::after{ transform:translateX(120%); }
+.checkout-btn:hover{ background:#c04733; transform:scale(1.02); }
+
+/* ── TOAST ── */
+.toast{
+  position:fixed; bottom:28px; left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--navy); color:var(--cream);
+  padding:13px 28px; border-radius:50px;
+  font-size:.875rem; font-weight:500; z-index:300;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap; pointer-events:none;
+  box-shadow:0 8px 24px rgba(0,0,0,0.25);
+}
+.toast.show{ transform:translateX(-50%) translateY(0); }
+.toast span{ color:var(--ochre); font-weight:700; }
+
+/* ── SORT & VIEW CONTROLS ── */
+.toolbar {
+  max-width:980px; margin: 0 auto 18px; padding: 0 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap;
+  opacity:0; animation:fadeUp .6s .6s forwards;
+}
+.sort-select {
+  appearance: none;
+  background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6B7B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+  border: 1.5px solid #d0c8b0; border-radius: 50px;
+  padding: 8px 36px 8px 16px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
+  color: var(--navy); cursor: pointer;
+  transition: border-color .2s, box-shadow .2s;
+  outline: none;
+}
+.sort-select:focus { border-color: var(--ochre); box-shadow: 0 0 0 3px rgba(201,151,58,.15); }
+
+.view-toggle { display: flex; gap: 4px; }
+.view-btn {
+  width: 34px; height: 34px; border-radius: 8px;
+  border: 1.5px solid #d0c8b0; background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; transition: all .2s; color: var(--grey);
+}
+.view-btn.active { background: var(--navy); border-color: var(--navy); color: var(--cream); }
+.view-btn:hover:not(.active) { border-color: var(--ochre); color: var(--ochre); }
+
+/* ── LIST VIEW ── */
+#booksGrid.list-view {
+  grid-template-columns: 1fr;
+  padding: 0 5% 80px;
+  gap: 10px;
+}
+#booksGrid.list-view .book-card {
+  flex-direction: row;
+  height: 110px;
+  border-radius: 10px;
+  align-items: stretch;
+}
+#booksGrid.list-view .book-card:hover {
+  transform: translateX(4px) translateY(-2px);
+}
+#booksGrid.list-view .book-cover-link {
+  width: 72px; flex-shrink: 0;
+  border-radius: 8px 0 0 8px; overflow: hidden;
+}
+#booksGrid.list-view .book-cover {
+  aspect-ratio: unset; height: 100%;
+  border-radius: 8px 0 0 8px; overflow: hidden;
+}
+#booksGrid.list-view .book-cover img { width:100%; height:100%; object-fit:cover; }
+#booksGrid.list-view .book-cover-overlay { display: none; }
+#booksGrid.list-view .price-stamp { display: none; }
+#booksGrid.list-view .wishlist-btn { top: 8px; left: 80px; }
+#booksGrid.list-view .book-info {
+  flex: 1; padding: 0 16px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto 1fr;
+  column-gap: 16px; align-items: center;
+}
+#booksGrid.list-view .book-title {
+  font-size: 0.95rem; grid-column: 1; grid-row: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#booksGrid.list-view .book-author { grid-column: 1; grid-row: 2; margin-bottom: 0; }
+#booksGrid.list-view .book-genre-tag {
+  grid-column: 1; grid-row: 3; align-self: end;
+  margin-bottom: 0; width: fit-content;
+}
+#booksGrid.list-view .book-condition { display: none; }
+#booksGrid.list-view .book-info > .add-to-cart-btn { display: none; }
+#booksGrid.list-view .list-right {
+  grid-column: 2; grid-row: 1 / 4;
+  display: flex; flex-direction: column;
+  align-items: flex-end; justify-content: center;
+  gap: 8px; padding: 14px 14px 14px 0; flex-shrink: 0;
+}
+#booksGrid.list-view .list-price {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem; font-weight: 900; color: var(--ochre); white-space: nowrap;
+}
+#booksGrid.list-view .list-condition {
+  font-size: 0.65rem; color: var(--grey);
+  display: flex; align-items: center; gap: 4px; font-weight: 600;
+}
+#booksGrid.list-view .list-cart-btn {
+  background: var(--navy); color: var(--cream); border: none;
+  padding: 8px 16px; border-radius: 50px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+  transition: background .2s, transform .15s;
+  position: relative; overflow: hidden;
+}
+#booksGrid.list-view .list-cart-btn::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(110deg,transparent 0 36%,rgba(255,255,255,.18) 50%,transparent 64% 100%);
+  transform:translateX(-120%); transition:transform .45s ease;
+}
+#booksGrid.list-view .list-cart-btn:hover::after { transform:translateX(120%); }
+#booksGrid.list-view .list-cart-btn:hover { background: var(--rust); transform: scale(1.04); }
+#booksGrid.list-view .list-cart-btn.added { background: #2a7a2a; }
+/* Hide list-view controls in normal grid */
+.list-right {
+  display: none;
+}
+
+/* Show them only in list view */
+#booksGrid.list-view .list-right {
+  display: flex;
+}
+/* ── WISHLIST HEART ── */
+.wishlist-btn {
+  position: absolute; top: 10px; left: 10px; z-index: 3;
+  background: rgba(26,27,46,0.55); backdrop-filter: blur(4px);
+  border: none; border-radius: 50%; width: 30px; height: 30px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; transition: transform .25s cubic-bezier(.34,1.56,.64,1), background .2s;
+  opacity: 0; pointer-events: none;
+}
+.book-card:hover .wishlist-btn { opacity: 1; pointer-events: all; }
+.wishlist-btn.wishlisted {
+  background: rgba(212,83,58,.85);
+  opacity: 1 !important; pointer-events: all !important;
+}
+.wishlist-btn:hover { transform: scale(1.2); }
+
+/* ── WISHLIST DRAWER ── */
+.wishlist-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5);
+  z-index: 200; opacity: 0; pointer-events: none; transition: opacity .25s;
+  backdrop-filter: blur(2px);
+}
+.wishlist-overlay.open { opacity: 1; pointer-events: all; }
+.wishlist-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: 390px; max-width: 95vw;
+  background: var(--white); z-index: 201;
+  transform: translateX(110%); transition: transform .35s cubic-bezier(.4,0,.2,1);
+  display: flex; flex-direction: column;
+  box-shadow: -8px 0 40px rgba(0,0,0,.15);
+}
+.wishlist-drawer.open { transform: translateX(0); animation: drawerSettle .42s ease both; }
+.wishlist-header {
+  background: #3D1A5C; color: var(--cream);
+  padding: 22px 24px; display: flex; align-items: center; justify-content: space-between;
+}
+.wishlist-header h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
+#close-wishlist {
+  background: none; border: none; color: var(--cream); font-size: 1.5rem; cursor: pointer; line-height: 1; transition: opacity .2s;
+}
+#close-wishlist:hover { opacity: .7; }
+.wishlist-items { flex: 1; overflow-y: auto; padding: 20px 24px; }
+.wishlist-item {
+  display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid #e8e0cc;
+  animation: fadeUp .3s forwards;
+}
+.wishlist-item-cover { width: 46px; height: 66px; border-radius: 3px; flex-shrink: 0; overflow: hidden; background: #ddd; }
+.wishlist-item-cover img { width: 100%; height: 100%; object-fit: cover; }
+.wishlist-item-info { flex: 1; }
+.wishlist-item-title { font-family: 'Playfair Display', serif; font-size: .88rem; font-weight: 700; margin-bottom: 2px; }
+.wishlist-item-author { font-size: .72rem; color: var(--grey); margin-bottom: 8px; }
+.wishlist-item-actions { display: flex; gap: 8px; }
+.wl-move-btn {
+  background: var(--navy); color: var(--cream); border: none; padding: 6px 12px;
+  border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 600;
+  cursor: pointer; transition: background .15s;
+}
+.wl-move-btn:hover { background: var(--rust); }
+.wl-remove-btn { background: none; border: none; color: #ccc; cursor: pointer; font-size: 1rem; transition: color .15s; }
+.wl-remove-btn:hover { color: var(--rust); }
+.wishlist-empty { text-align: center; padding: 60px 0; color: var(--grey); }
+.wishlist-empty .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+.wishlist-footer { padding: 20px 24px; border-top: 1px solid #e8e0cc; }
+.wl-add-all-btn {
+  width: 100%; background: #3D1A5C; color: white; border: none; padding: 14px;
+  font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 700;
+  cursor: pointer; border-radius: 4px; transition: background .2s;
+}
+.wl-add-all-btn:hover { background: #5a2a8a; }
+
+/* ── NAV WISHLIST BTN ── */
+#wishlist-btn {
+  background: transparent; color: #aaa; border: 1.5px solid rgba(255,255,255,.15);
+  padding: 7px 14px; border-radius: 4px;
+  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.875rem;
+  cursor: pointer; display: flex; align-items: center; gap: 7px;
+  transition: background .2s, color .2s, transform .15s;
+  position: relative;
+}
+#wishlist-btn:hover { background: rgba(255,255,255,.08); color: var(--cream); transform: translateY(-1px); }
+.wishlist-count-badge {
+  display: none; background: #9B59B6; color: white; font-size: 0.7rem; font-weight: 700;
+  width: 18px; height: 18px; border-radius: 50%;
+  align-items: center; justify-content: center;
+}
+.wishlist-count-badge.visible { display: flex; }
+
+/* ── RANDOM BOOK FAB ── */
+.fab-random {
+  position: fixed; bottom: 28px; right: 24px; z-index: 150;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--ochre), var(--rust));
+  color: white; border: none; cursor: pointer;
+  font-size: 1.4rem; box-shadow: 0 8px 24px rgba(212,83,58,.4);
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
+  display: flex; align-items: center; justify-content: center;
+}
+.fab-random:hover { transform: scale(1.12) rotate(15deg); box-shadow: 0 12px 32px rgba(212,83,58,.55); }
+.fab-random:active { transform: scale(.95); }
+.fab-tooltip {
+  position: fixed; bottom: 95px; right: 24px; z-index: 149;
+  background: var(--navy); color: var(--cream);
+  padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;
+  white-space: nowrap; pointer-events: none;
+  opacity: 0; transform: translateY(6px); transition: all .25s;
+}
+.fab-wrap:hover .fab-tooltip { opacity: 1; transform: translateY(0); }
+.fab-wrap { position: fixed; bottom: 28px; right: 24px; z-index: 150; display: flex; flex-direction: column; align-items: center; opacity:0; animation:fadeUp .6s .9s forwards; }
+
+/* ── RANDOM BOOK MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  z-index: 300; display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .25s;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.random-modal {
+  background: var(--white); border-radius: 12px; padding: 36px 32px;
+  max-width: 380px; width: 90%; text-align: center;
+  transform: scale(.88) translateY(20px); transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+  position: relative;
+}
+.modal-overlay.open .random-modal { transform: scale(1) translateY(0); }
+.modal-close {
+  position: absolute; top: 14px; right: 16px;
+  background: none; border: none; font-size: 1.3rem; cursor: pointer;
+  color: var(--grey); transition: color .2s;
+}
+.modal-close:hover { color: var(--navy); }
+.modal-cover { width: 110px; height: 165px; object-fit: cover; border-radius: 4px;
+  margin: 0 auto 18px; display: block;
+  box-shadow: 0 12px 32px rgba(26,27,46,.18); }
+.modal-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--ochre); margin-bottom: 8px; }
+.modal-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900;
+  margin-bottom: 4px; }
+.modal-author { font-size: 0.82rem; color: var(--grey); margin-bottom: 18px; }
+.modal-actions { display: flex; gap: 10px; justify-content: center; }
+.modal-cart-btn {
+  background: var(--rust); color: white; border: none; padding: 11px 22px;
+  border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 700;
+  cursor: pointer; transition: background .2s; flex: 1;
+}
+.modal-cart-btn:hover { background: #c04733; }
+.modal-reroll-btn {
+  background: var(--cream); color: var(--navy); border: 1.5px solid #d0c8b0; padding: 11px 18px;
+  border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 600;
+  cursor: pointer; transition: border-color .2s;
+}
+.modal-reroll-btn:hover { border-color: var(--navy); }
+
+/* ── DICE ROLL OVERLAY ── */
+.dice-overlay{
+  position: fixed; inset: 0; z-index: 350;
+  background: rgba(26,27,46,.55); backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .25s;
+}
+.dice-overlay.show{ opacity: 1; pointer-events: all; }
+.dice-scene{ perspective: 600px; width: 64px; height: 64px; }
+.dice-cube{
+  width: 64px; height: 64px; position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(0) rotateY(0) rotateZ(0);
+}
+.dice-cube.rolling{ animation: diceTumble 1.05s cubic-bezier(.45,.05,.4,1) forwards; }
+@keyframes diceTumble{
+  0%   { transform: translateY(0)    rotateX(0deg)   rotateY(0deg)   rotateZ(0deg); }
+  15%  { transform: translateY(-42px) rotateX(160deg) rotateY(120deg) rotateZ(40deg); }
+  35%  { transform: translateY(0)    rotateX(380deg) rotateY(260deg) rotateZ(120deg); }
+  55%  { transform: translateY(-22px) rotateX(560deg) rotateY(480deg) rotateZ(200deg); }
+  75%  { transform: translateY(0)    rotateX(680deg) rotateY(620deg) rotateZ(280deg); }
+  90%  { transform: translateY(-6px) rotateX(720deg) rotateY(720deg) rotateZ(340deg); }
+  100% { transform: translateY(0)    rotateX(720deg) rotateY(720deg) rotateZ(360deg); }
+}
+.dice-face{
+  position: absolute; width: 64px; height: 64px;
+  background: var(--cream); border: 2px solid var(--ochre); border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(26,27,46,.25), inset 0 0 10px rgba(26,27,46,.06);
+  display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(3,1fr);
+  padding: 9px; box-sizing: border-box;
+}
+.dice-face .pip{
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--rust); align-self: center; justify-self: center;
+}
+.face-1{ transform: translateZ(32px); }
+.face-1 .pip{ grid-column: 2; grid-row: 2; }
+.face-6{ transform: translateZ(-32px) rotateY(180deg); }
+.face-6 .pip:nth-child(1){ grid-column: 1; grid-row: 1; }
+.face-6 .pip:nth-child(2){ grid-column: 1; grid-row: 2; }
+.face-6 .pip:nth-child(3){ grid-column: 1; grid-row: 3; }
+.face-6 .pip:nth-child(4){ grid-column: 3; grid-row: 1; }
+.face-6 .pip:nth-child(5){ grid-column: 3; grid-row: 2; }
+.face-6 .pip:nth-child(6){ grid-column: 3; grid-row: 3; }
+.face-3{ transform: rotateY(90deg) translateZ(32px); }
+.face-3 .pip:nth-child(1){ grid-column: 1; grid-row: 1; }
+.face-3 .pip:nth-child(2){ grid-column: 2; grid-row: 2; }
+.face-3 .pip:nth-child(3){ grid-column: 3; grid-row: 3; }
+.face-4{ transform: rotateY(-90deg) translateZ(32px); }
+.face-4 .pip:nth-child(1){ grid-column: 1; grid-row: 1; }
+.face-4 .pip:nth-child(2){ grid-column: 3; grid-row: 1; }
+.face-4 .pip:nth-child(3){ grid-column: 1; grid-row: 3; }
+.face-4 .pip:nth-child(4){ grid-column: 3; grid-row: 3; }
+.face-2{ transform: rotateX(90deg) translateZ(32px); }
+.face-2 .pip:nth-child(1){ grid-column: 1; grid-row: 1; }
+.face-2 .pip:nth-child(2){ grid-column: 3; grid-row: 3; }
+.face-5{ transform: rotateX(-90deg) translateZ(32px); }
+.face-5 .pip:nth-child(1){ grid-column: 1; grid-row: 1; }
+.face-5 .pip:nth-child(2){ grid-column: 3; grid-row: 1; }
+.face-5 .pip:nth-child(3){ grid-column: 2; grid-row: 2; }
+.face-5 .pip:nth-child(4){ grid-column: 1; grid-row: 3; }
+.face-5 .pip:nth-child(5){ grid-column: 3; grid-row: 3; }
+
+/* ── KEYBOARD HINT ── */
+.search-hint {
+  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  background: rgba(26,27,46,.08); border-radius: 4px;
+  padding: 2px 7px; font-size: 0.7rem; font-weight: 600; color: var(--grey);
+  pointer-events: none; letter-spacing: 0.5px; transition: opacity .2s;
+}
+#searchInput:focus ~ .search-hint { opacity: 0; }
+
+/* ── CONFETTI ── */
+.confetti-piece {
+  position: fixed; pointer-events: none; z-index: 9999;
+  border-radius: 2px; animation: confettiFall linear forwards;
+}
+@keyframes confettiFall {
+  0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+  100% { transform: translateY(var(--fall)) rotate(var(--spin)) scale(.4); opacity: 0; }
+}
+
+/* ── SPARKLE CURSOR ── */
+.sparkle {
+  position: fixed; pointer-events: none; z-index: 9999;
+  width: 8px; height: 8px; border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: sparklePop .6s ease forwards;
+}
+@keyframes sparklePop {
+  0%   { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(0) translateY(-20px); opacity: 0; }
+}
+
+/* ── STREAK BADGE ── */
+.streak-badge {
+  position: fixed; bottom: 100px; right: 24px; z-index: 149;
+  background: var(--navy); color: var(--cream);
+  border-radius: 50px; padding: 8px 14px;
+  font-size: 0.78rem; font-weight: 700;
+  box-shadow: 0 6px 20px rgba(26,27,46,.25);
+  display: flex; align-items: center; gap: 6px;
+  opacity: 0; transform: translateX(80px);
+  transition: opacity .4s, transform .4s cubic-bezier(.34,1.56,.64,1);
+  cursor: pointer; border: none; font-family: 'DM Sans', sans-serif;
+}
+.streak-badge:hover { background: #2a2c47; transform: translateX(0) translateY(-2px); box-shadow: 0 10px 28px rgba(26,27,46,.35); }
+.streak-badge.visible { opacity: 1; transform: translateX(0); }
+.streak-badge.visible:hover { transform: translateX(0) translateY(-2px); }
+.streak-badge .streak-fire { font-size: 1rem; }
+.streak-badge .streak-num { color: var(--ochre); }
+
+/* ── STREAK POPUP ── */
+.streak-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 300;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s;
+  backdrop-filter: blur(3px);
+}
+.streak-overlay.open { opacity: 1; pointer-events: all; }
+.streak-popup {
+  position: fixed;
+  bottom: 170px; right: 24px;
+  width: 300px;
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(26,27,46,.3);
+  z-index: 301;
+  transform: scale(0.88) translateY(16px);
+  opacity: 0; pointer-events: none;
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .25s;
+  overflow: hidden;
+}
+.streak-popup.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: all; }
+.streak-popup-header {
+  background: var(--navy);
+  padding: 18px 20px 14px;
+  text-align: center;
+  position: relative;
+}
+.streak-popup-header .sp-close {
+  position: absolute; top: 10px; right: 14px;
+  background: none; border: none; color: #aaa;
+  font-size: 1.2rem; cursor: pointer; line-height: 1;
+  transition: color .15s, transform .2s;
+}
+.streak-popup-header .sp-close:hover { color: var(--cream); transform: rotate(90deg); }
+.streak-popup-fire { font-size: 2.4rem; display: block; margin-bottom: 4px; }
+.streak-popup-days {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem; font-weight: 900; color: var(--ochre);
+  line-height: 1;
+}
+.streak-popup-label {
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: #7a7a8c; margin-top: 4px;
+}
+.streak-popup-body { padding: 16px 20px 20px; }
+.streak-popup-title {
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--grey);
+  margin-bottom: 12px;
+}
+.streak-milestone {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #ede5ce;
+}
+.streak-milestone:last-child { border-bottom: none; }
+.sm-icon {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(201,151,58,.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+}
+.sm-icon.unlocked { background: rgba(201,151,58,.22); }
+.sm-icon.locked   { background: rgba(107,107,123,.1); filter: grayscale(1); }
+.sm-text { flex: 1; }
+.sm-day  { font-size: 0.7rem; font-weight: 700; color: var(--ochre); margin-bottom: 1px; text-transform: uppercase; letter-spacing: 1px; }
+.sm-day.locked-day { color: var(--grey); }
+.sm-desc { font-size: 0.8rem; color: var(--navy); font-weight: 500; line-height: 1.4; }
+.sm-desc.locked-desc { color: var(--grey); }
+.streak-popup-footer {
+  padding: 12px 20px;
+  background: rgba(201,151,58,.07);
+  border-top: 1px solid rgba(201,151,58,.15);
+  font-size: 0.75rem; color: var(--grey); text-align: center; line-height: 1.5;
+}
+
+/* ── BOOK CARD QUICK-PEEK (expand on click in list view) ── */
+#booksGrid.list-view .book-card.peeked {
+  height: auto; min-height: 110px;
+}
+#booksGrid.list-view .book-card.peeked .peek-blurb {
+  display: block;
+}
+.peek-blurb {
+  display: none;
+  font-size: 0.75rem; color: var(--grey);
+  grid-column: 1; grid-row: 4;
+  padding-top: 6px;
+  line-height: 1.5;
+  animation: fadeUp .2s forwards;
+}
+
+/* ── GENRE TAG CLICK RIPPLE ── */
+.filter-pill:active { transform: scale(0.94); }
+
+/* ── CART SHAKE ANIMATION ── */
+@keyframes cartShake {
+  0%,100% { transform: scale(1.06) rotate(0); }
+  25%      { transform: scale(1.16) rotate(-10deg); }
+  75%      { transform: scale(1.16) rotate(10deg); }
+}
+.cart-shake { animation: cartShake .6s ease; }
+
+/* ── CONFETTI BURST on add-to-cart ── */
+.mini-confetti {
+  position: fixed; pointer-events: none; z-index: 9999;
+  width: 7px; height: 7px;
+  animation: miniFall 1.5s ease forwards;
+}
+@keyframes miniFall {
+  0%   { opacity: 1; transform: translate(0,0) rotate(0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--tx), var(--ty)) rotate(var(--r)) scale(.3); }
+}
+
+/* ── ADD-TO-CART RIPPLE RING ── */
+.add-ripple {
+  position: fixed; z-index: 9998; pointer-events: none;
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 3px solid var(--ochre);
+  transform: translate(-50%,-50%);
+  animation: rippleExpand 1s ease-out forwards;
+}
+@keyframes rippleExpand {
+  0%   { transform: translate(-50%,-50%) scale(1);   opacity: .85; }
+  100% { transform: translate(-50%,-50%) scale(13);   opacity: 0; }
+}
+
+/* ── FLY-TO-CART COIN ── */
+.fly-to-cart {
+  position: fixed; z-index: 9999; pointer-events: none;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--ochre), var(--rust));
+  box-shadow: 0 6px 20px rgba(212,83,58,.6);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--cream); font-weight: 700;
+  font-size: 1rem;
+  animation: flyArc 1.05s cubic-bezier(.3,.6,.35,1) forwards;
+}
+@keyframes flyArc {
+  0%   { transform: translate(0,0) scale(1) rotate(0deg);     opacity: 1; }
+  55%  { transform: translate(var(--midX), var(--midY)) scale(1.05) rotate(180deg); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(.25) rotate(340deg); opacity: 0; }
+}
+
+/* ── FLOATING +1 ── */
+.float-plus1 {
+  position: fixed; z-index: 9999; pointer-events: none;
+  font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 1.6rem;
+  color: var(--rust); text-shadow: 0 1px 0 rgba(255,255,255,.6);
+  animation: floatPlus1 1.5s ease forwards;
+}
+@keyframes floatPlus1 {
+  0%   { opacity: 0; transform: translate(-50%,0) scale(.5); }
+  18%  { opacity: 1; transform: translate(-50%,-14px) scale(1.4); }
+  100% { opacity: 0; transform: translate(-50%,-72px) scale(1.1); }
+}
+
+/* ── ADD BUTTON POP ── */
+@keyframes addPop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(.85); }
+  65%  { transform: scale(1.14); }
+  100% { transform: scale(1); }
+}
+.add-to-cart-btn.pop, .list-cart-btn.pop { animation: addPop .7s ease; }
+
+/* ── CART ICON GLOW PULSE ── */
+@keyframes cartPulse {
+  0%   { box-shadow: 0 8px 24px rgba(212,83,58,.4), 0 0 0 0 rgba(212,83,58,.7); }
+  70%  { box-shadow: 0 8px 24px rgba(212,83,58,.4), 0 0 0 26px rgba(212,83,58,0); }
+  100% { box-shadow: 0 8px 24px rgba(212,83,58,.4), 0 0 0 0 rgba(212,83,58,0); }
+}
+.cart-pulse { animation: cartPulse 1.1s ease-out; }
+.cart-wiggle { animation: cartWiggle .85s ease; }
+@keyframes cartWiggle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  20%      { transform: rotate(-14deg) scale(1.16); }
+  45%      { transform: rotate(11deg) scale(1.16); }
+  70%      { transform: rotate(-6deg) scale(1.05); }
+}
+
+/* ── CARD LIFT + GLOW on add ── */
+.book-card.cart-lift{
+  animation: cardLift 1s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes cardLift{
+  0%   { transform: translateY(0) scale(1) rotate(0deg);        box-shadow: 0 0 0 0 rgba(201,151,58,0); }
+  25%  { transform: translateY(-18px) scale(1.06) rotate(-2deg); box-shadow: 0 0 0 14px rgba(201,151,58,.38); }
+  60%  { transform: translateY(-7px) scale(1.03) rotate(1.4deg); box-shadow: 0 0 0 5px rgba(201,151,58,.18); }
+  100% { transform: translateY(0) scale(1) rotate(0deg);         box-shadow: 0 0 0 0 rgba(201,151,58,0); }
+}
+
+/* ── FLYING BOOK COVER ── */
+.fly-cover{
+  position: fixed; z-index: 9999; pointer-events: none;
+  width: 70px; height: 94px; object-fit: cover; border-radius: 4px;
+  box-shadow: 0 14px 30px rgba(26,27,46,.45);
+  animation: flyArcCover 1.15s cubic-bezier(.3,.6,.35,1) forwards;
+}
+@keyframes flyArcCover{
+  0%   { transform: translate(0,0)               scale(1)   rotate(0deg);   opacity: 1; }
+  55%  { transform: translate(var(--midX), var(--midY)) scale(.65) rotate(200deg); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy))     scale(.12) rotate(380deg); opacity: 0; }
+}
+
+/* ── CART COUNT EXTRA BUMP ── */
+.count-bump{ animation: countBump .85s cubic-bezier(.34,1.56,.64,1); }
+@keyframes countBump{
+  0%   { transform: scale(1); }
+  35%  { transform: scale(2); }
+  65%  { transform: scale(.85); }
+  100% { transform: scale(1); }
+}
+
+/* ── BOOK COUNT TICKER ── */
+.browse-ticker {
+  position: fixed; bottom: 28px; left: 24px; z-index: 149;
+  background: rgba(26,27,46,.82); backdrop-filter: blur(8px);
+  color: #888; border-radius: 50px; padding: 7px 14px;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity .4s, transform .4s;
+  pointer-events: none;
+}
+.browse-ticker.visible { opacity: 1; transform: translateY(0); }
+.browse-ticker span { color: var(--ochre); }
+.footer-strip{
+  background:var(--navy); color:var(--cream);
+  text-align:center; padding:24px;
+  font-size:.82rem; color:#888;
+  position:relative;
+}
+.footer-strip::before{
+  content:'';
+  position:absolute; top:0; left:5%; right:5%; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(201,151,58,.55),transparent);
+}
+.footer-strip a{ color:var(--ochre); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .books-grid{ grid-template-columns:repeat(2,1fr); gap:14px; padding:0 4% 60px; }
+  .page-header{ padding:60px 16px 36px; }
+  .header-stats{ gap:12px; flex-wrap:wrap; }
+  .stat-num{ font-size:1.4rem; }
+  .nav-right{ gap:12px; }
+  .back-btn{ display:none; }
+  #cart-btn{ padding:8px 14px; }
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
+/* ── PAGE LOADER (shows only if load is slow) ── */
+.page-loader{
+  position: fixed; inset: 0; z-index: 9000;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(201,151,58,.10), transparent 45%),
+    var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .35s ease;
+}
+.page-loader.show{ opacity: 1; pointer-events: all; }
+.page-loader-content{
+  display: flex; flex-direction: column; align-items: center; gap: 22px;
+}
+.page-loader-logo{
+  font-family: 'Playfair Display', serif; font-weight: 900; font-size: 2.1rem;
+  color: var(--navy); letter-spacing: -0.5px;
+  animation: loaderPulse 1.5s ease-in-out infinite;
+}
+.page-loader-logo span{ color: var(--ochre); }
+@keyframes loaderPulse{
+  0%, 100% { opacity: .5;  transform: scale(.96); }
+  50%      { opacity: 1;   transform: scale(1); }
+}
+.page-loader-bar{
+  width: 130px; height: 3px; border-radius: 2px;
+  background: rgba(26,27,46,.09); overflow: hidden; position: relative;
+}
+.page-loader-bar-fill{
+  position: absolute; top: 0; left: -45%; width: 45%; height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--ochre), var(--rust));
+  box-shadow: 0 0 10px rgba(212,83,58,.5);
+  animation: loaderSweep 1.3s ease-in-out infinite;
+}
+@keyframes loaderSweep{
+  0%   { left: -45%; }
+  100% { left: 100%; }
+}
+.page-loader-tagline{
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--grey);
+}
+</style>
+</head>
+<body>
+<div class="page-loader" id="page-loader">
+  <div class="page-loader-content">
+    <div class="page-loader-logo">mr<span>99</span>books</div>
+    <div class="page-loader-bar"><div class="page-loader-bar-fill"></div></div>
+    <div class="page-loader-tagline">Loading your library…</div>
+  </div>
+</div>
+<div class="scroll-progress" id="scroll-progress"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="home2.html"><div class="logo">mr<span>99</span>books</div></a>
+  <div class="nav-right">
+    <a href="home2.html" class="back-btn">← Back Home</a>
+    <button id="wishlist-btn">
+      🤍 Saved
+      <span id="wishlist-count" class="wishlist-count-badge"></span>
+    </button>
+    <button id="cart-btn">
+      🛒 Cart
+      <span id="cart-count"></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO HEADER -->
+<section class="page-header">
+  <div class="header-eyebrow">The Full Collection</div>
+  <h1>Every book, <em>₹99.</em></h1>
+  <p>Browse, search and filter our entire library. Pre-loved books, unbeatable price.</p>
+  <div class="header-stats">
+    <div class="stat">
+      <div class="stat-num" id="totalCount">63</div>
+      <div class="stat-label">Books Available</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">₹99</div>
+      <div class="stat-label">Every Single Book</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">🚚</div>
+      <div class="stat-label">Ships Pan India</div>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH & FILTERS -->
+<div class="controls">
+  <div class="search-bar">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search by title, author or genre…">
+    <span class="search-hint">/ to search</span>
+  </div>
+  <div class="filter-row" id="filterRow">
+    <button class="filter-pill active" data-genre="all">All</button>
+  </div>
+  <p class="result-count" id="resultCount"></p>
+</div>
+
+<!-- SORT + VIEW TOOLBAR -->
+<div class="toolbar">
+  <select class="sort-select" id="sortSelect">
+    <option value="default">Sort: Default</option>
+    <option value="az">Title A → Z</option>
+    <option value="za">Title Z → A</option>
+    <option value="author">Author A → Z</option>
+  </select>
+  <div class="view-toggle">
+    <button class="view-btn active" id="gridViewBtn" title="Grid view">⊞</button>
+    <button class="view-btn" id="listViewBtn" title="List view">☰</button>
+  </div>
+</div>
+
+<!-- BOOKS GRID -->
+<div class="books-grid" id="booksGrid"></div>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-header">
+    <h3>Your Cart 🛒</h3>
+    <button id="close-cart">×</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <div class="cart-empty">
+      <div class="empty-icon">📚</div>
+      <p>Your cart is empty.<br/>Add some books above!</p>
+    </div>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-amount" id="cart-total">₹0</span>
+    </div>
+    <div class="cart-savings" id="cart-savings"></div>
+    <button class="checkout-btn" onclick="checkout()">Place Order via WhatsApp →</button>
+  </div>
+</div>
+
+<!-- STREAK + BROWSE TICKER -->
+<button class="streak-badge" id="streakBadge" onclick="openStreakPopup()">
+  <span class="streak-fire">🔥</span>
+  <span>Day streak: <span class="streak-num" id="streakNum">0</span></span>
+</button>
+
+<!-- STREAK POPUP -->
+<div class="streak-overlay" id="streakOverlay" onclick="closeStreakPopup()"></div>
+<div class="streak-popup" id="streakPopup">
+  <div class="streak-popup-header">
+    <button class="sp-close" onclick="closeStreakPopup()">×</button>
+    <span class="streak-popup-fire">🔥</span>
+    <div class="streak-popup-days" id="streakPopupDays">0</div>
+    <div class="streak-popup-label">Day Streak</div>
+  </div>
+  <div class="streak-popup-body">
+    <div class="streak-popup-title">Streak Rewards</div>
+    <div id="streakMilestones"></div>
+  </div>
+  <div class="streak-popup-footer" id="streakFooter"></div>
+</div>
+<div class="browse-ticker" id="browseTicker">
+  👀 You've viewed <span id="browseCount">0</span> books
+</div>
+
+<!-- WISHLIST DRAWER -->
+<div class="wishlist-overlay" id="wishlist-overlay"></div>
+<div class="wishlist-drawer" id="wishlist-drawer">
+  <div class="wishlist-header">
+    <h3>💜 Saved Books</h3>
+    <button id="close-wishlist">×</button>
+  </div>
+  <div class="wishlist-items" id="wishlist-items">
+    <div class="wishlist-empty">
+      <div class="empty-icon">🤍</div>
+      <p>No saved books yet.<br/>Click the heart on any book!</p>
+    </div>
+  </div>
+  <div class="wishlist-footer" id="wishlist-footer" style="display:none">
+    <button class="wl-add-all-btn" onclick="addAllToCart()">Add All to Cart →</button>
+  </div>
+</div>
+
+<!-- RANDOM BOOK FAB -->
+<div class="fab-wrap" id="fab-wrap">
+  <span class="fab-tooltip">Surprise me!</span>
+  <button class="fab-random" id="fab-random" title="Random book">🎲</button>
+</div>
+
+<!-- DICE ROLL OVERLAY -->
+<div class="dice-overlay" id="dice-overlay">
+  <div class="dice-scene">
+    <div class="dice-cube" id="dice-cube">
+      <div class="dice-face face-1"><span class="pip"></span></div>
+      <div class="dice-face face-2"><span class="pip"></span><span class="pip"></span></div>
+      <div class="dice-face face-3"><span class="pip"></span><span class="pip"></span><span class="pip"></span></div>
+      <div class="dice-face face-4"><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div>
+      <div class="dice-face face-5"><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div>
+      <div class="dice-face face-6"><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- RANDOM BOOK MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="random-modal">
+    <button class="modal-close" id="modal-close">×</button>
+    <div class="modal-label">✨ Your Random Pick</div>
+    <img class="modal-cover" id="modal-cover" src="" alt="">
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-author" id="modal-author"></div>
+    <div class="modal-actions">
+      <button class="modal-cart-btn" id="modal-cart-btn">Add to Cart — ₹99</button>
+      <button class="modal-reroll-btn" id="modal-reroll-btn">🎲 Re-roll</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── PAGE LOADER: only show if page takes longer than 400ms to load ──
+let loaderShown = false;
+const loaderTimeout = setTimeout(() => {
+  loaderShown = true;
+  document.getElementById("page-loader").classList.add("show");
+}, 1);
+
+window.addEventListener("load", () => {
+  clearTimeout(loaderTimeout);
+  const loader = document.getElementById("page-loader");
+  if (loaderShown) {
+    setTimeout(() => loader.classList.remove("show"), 150);
+  } else {
+    loader.remove();
+  }
+});
+
+// ── BOOK DATA ──
+const books = [
+ { id:101, title:"Mindset", author:"Carol S. Dweck", category:"Self Help", categories:["Self Help","Psychology","Personal Growth","Education"], condition:"Good", image:"mindset.webp", url:"mindset.html" },
+
+{ id:102, title:"The Courage to Be Disliked", author:"Ichiro Kishimi & Fumitake Koga", category:"Self Help", categories:["Self Help","Psychology","Philosophy","Personal Growth"], condition:"Very Good", image:"courage.jpg", url:"courage.html" },
+
+{ id:103, title:"Einstein For Everyone", author:"Robert I. Piccioni", category:"Science", categories:["Science","Physics","Education"], condition:"Good", image:"einstein.jpg", url:"einstein.html" },
+
+{ id:104, title:"Noah's Gold", author:"Frank Cottrell-Boyce", category:"Children", categories:["Children","Adventure","Fiction"], condition:"Good", image:"noahs.jpg", url:"noahs.html" },
+
+{ id:105, title:"As a Man Thinketh", author:"James Allen", category:"Self Help", categories:["Self Help","Philosophy","Psychology","Personal Growth"], condition:"Very Good", image:"man.jpg", url:"man.html" },
+
+{ id:106, title:"The Conscious Parent", author:"Shefali Tsabary", category:"Personal Growth", categories:["Personal Growth","Parenting","Psychology","Self Help"], condition:"Good", image:"parent.jpg", url:"parent.html" },
+
+{ id:107, title:"Same As Ever", author:"Morgan Housel", category:"Psychology", categories:["Psychology","Finance","Business","Self Help"], condition:"Good", image:"SAME.webp", url:"same.html" },
+
+{ id:108, title:"Supernormal", author:"Meg Jay", category:"Psychology", categories:["Psychology","Self Help","Personal Growth","Career"], condition:"Good", image:"super.jpg", url:"supernormal.html" },
+
+{ id:109, title:"The Almanack of Naval Ravikant", author:"Eric Jorgenson", category:"Self Help", categories:["Self Help","Business","Finance","Entrepreneurship","Philosophy"], condition:"Good", image:"almanack.jpg", url:"almanack.html" },
+
+{ id:110, title:"Percy Jackson and the Lightning Thief", author:"Rick Riordan", category:"Fantasy", categories:["Fantasy","Adventure","Young Adult","Mythology"], condition:"Good", image:"percy.jpg", url:"percy.html" },
+
+{ id:111, title:"Percy Jackson and the Sea of Monsters", author:"Rick Riordan", category:"Fantasy", categories:["Fantasy","Adventure","Young Adult","Mythology"], condition:"Good", image:"percy2.webp", url:"percy2.html" },
+
+{ id:112, title:"A Life in Full Flight", author:"Alan Ruddock", category:"Biography", categories:["Biography","Aviation","Memoir"], condition:"Good", image:"flight.jpg", url:"flight.html" },
+
+{ id:113, title:"Mind Master", author:"Viswanathan Anand", category:"Self Help", categories:["Self Help","Chess","Sports","Personal Growth"], condition:"Good", image:"mind.jpg", url:"mindmaster.html" },
+
+{ id:114, title:"Be a People Person", author:"John C. Maxwell", category:"Self Help", categories:["Self Help","Leadership","Communication","Business"], condition:"Good", image:"ppl.webp", url:"ppl.html" },
+
+{ id:115, title:"Learned Optimism", author:"Martin E.P. Seligman", category:"Psychology", categories:["Psychology","Self Help","Personal Growth"], condition:"Good", image:"optimism.jpg", url:"optimism.html" },
+
+{ id:116, title:"How to Be a Mathemagician", author:"Aditi Singhal & Sudhir Singhal", category:"Education", categories:["Education","Mathematics","Children"], condition:"Good", image:"math.jpg", url:"math.html" },
+
+{ id:117, title:"A Little Princess", author:"Frances Hodgson Burnett", category:"Classics", categories:["Classics","Children","Fiction"], condition:"Good", image:"princess.jpg", url:"princess.html" },
+
+{ id:118, title:"The Three Lives of the Kaiser", author:"Uli Hesse", category:"Biography", categories:["Biography","Football","Sports"], condition:"Good", image:"kaiser.webp", url:"kaiser.html" },
+
+{ id:119, title:"The Unique Indian Market", author:"Prateek Jain", category:"Business", categories:["Business","Marketing","Entrepreneurship","Finance"], condition:"Good", image:"indmarket.jpg", url:"indmarket.html" },
+
+{ id:120, title:"The Psychology of Money", author:"Morgan Housel", category:"Finance", categories:["Finance","Psychology","Business","Self Help","Investing"], condition:"Good", image:"money.jpg", url:"money.html" },
+
+{ id:121, title:"Fatal Accidents of Birth", author:"Harsh Mander", category:"Nonfiction", categories:["Nonfiction","Social Issues","Politics"], condition:"Good", image:"fatal.jpg", url:"fatal.html" },
+
+{ id:122, title:"The Boy Who Runs", author:"John Brant", category:"Biography", categories:["Biography","Sports","Running"], condition:"Good", image:"boy.jpg", url:"boy.html" },
+
+{ id:123, title:"The Secret Garden", author:"Frances Hodgson Burnett", category:"Classics", categories:["Classics","Children","Fiction"], condition:"Good", image:"secret.jpg", url:"secret.html" },
+
+{ id:124, title:"The Monk Who Sold His Ferrari", author:"Robin Sharma", category:"Self Help", categories:["Self Help","Personal Growth","Spirituality","Psychology"], condition:"Good", image:"monk.jpg", url:"monk.html" },
+
+{ id:125, title:"World's Greatest Puzzle", author:"Charles Barry Townsend", category:"Puzzle", categories:["Puzzle","Games","Education"], condition:"Good", image:"worldpuzzle.jpg", url:"worldpuzzle.html" },
+
+{ id:126, title:"Common Yet Uncommon", author:"Sudha Murty", category:"Inspirational", categories:["Inspirational","Personal Growth","Nonfiction"], condition:"Good", image:"commonuncommon.jpg", url:"commonuncommon.html" },
+
+{ id:127, title:"The Call of the Wild", author:"Jack London", category:"Classics", categories:["Classics","Adventure","Fiction"], condition:"Good", image:"callwild.jpg", url:"callwild.html" },
+
+{ id:128, title:"How Innovation Works", author:"Matt Ridley", category:"Business", categories:["Business","Technology","Science","Entrepreneurship"], condition:"Good", image:"innovation.jpg", url:"innovation.html" },
+
+{ id:129, title:"My Journey", author:"A.P.J. Abdul Kalam", category:"Autobiography", categories:["Autobiography","Biography","Inspirational","Science"], condition:"Good", image:"myjourney.jpg", url:"myjourney.html" },
+
+{ id:130, title:"The 7 Habits of Highly Effective People", author:"Stephen R. Covey", category:"Self Help", categories:["Self Help","Leadership","Business","Personal Growth"], condition:"Good", image:"7habits.jpg", url:"7habits.html" },
+
+{ id:131, title:"Source Code", author:"Bill Gates", category:"Memoir", categories:["Memoir","Biography","Technology","Business"], condition:"Good", image:"sourcecode.jpg", url:"sourcecode.html" },
+
+{ id:132, title:"Reignite 2", author:"Srijan Pal Singh", category:"Personal Growth", categories:["Personal Growth","Inspirational","Education"], condition:"Good", image:"reignite.jpg", url:"reignite2.html" },
+ { id:133, title:"The Mystery of the School on Fire", author:"Ravi Subramanian", category:"Mystery", categories:["Mystery","Thriller","Young Adult","Fiction"], condition:"Good", image:"schoolfire.jpg", url:"schoolfire.html" },
+
+{ id:134, title:"Swaraj", author:"Arvind Kejriwal", category:"Politics", categories:["Politics","Current Affairs","Nonfiction","India"], condition:"Good", image:"swaraj.jpg", url:"swaraj.html" },
+
+{ id:135, title:"Mastering HTML, CSS & JavaScript Web Publishing", author:"Laura Lemay, Rafe Colburn", category:"Technology", categories:["Technology","Programming","Web Development","Education"], condition:"Good", image:"masterhtml.jpg", url:"masterhtml.html" },
+
+{ id:136, title:"Lewis Hamilton: My Story", author:"Lewis Hamilton", category:"Biography", categories:["Biography","Sports","Formula 1","Autobiography"], condition:"Good", image:"hamilton.jpg", url:"hamilton.html" },
+
+{ id:137, title:"Emotional Intelligence 2.0", author:"Travis Bradberry", category:"Psychology", categories:["Psychology","Self Help","Leadership","Business"], condition:"Good", image:"ei20.jpg", url:"ei20.html" },
+
+{ id:138, title:"Danny, the Champion of the World", author:"Roald Dahl", category:"Children", categories:["Children","Fiction","Adventure"], condition:"Good", image:"danny.jpg", url:"danny.html" },
+
+{ id:139, title:"The Power of Positive Attitude", author:"Roger Fritz", category:"Self Help", categories:["Self Help","Psychology","Personal Growth","Motivation"], condition:"Good", image:"positiveattitude.jpg", url:"positiveattitude.html" },
+
+{ id:140, title:"The Hope Circuit", author:"Martin E.P. Seligman", category:"Psychology", categories:["Psychology","Memoir","Self Help","Personal Growth"], condition:"Good", image:"hopecircuit.jpg", url:"hopecircuit.html" },
+
+{ id:141, title:"The Let Them Theory", author:"Mel Robbins", category:"Self Help", categories:["Self Help","Psychology","Relationships","Personal Growth"], condition:"Good", image:"letthem.jpg", url:"letthem.html" },
+
+{ id:142, title:"You Become What You Think", author:"Shubham Kumar", category:"Self Help", categories:["Self Help","Personal Growth","Motivation","Psychology"], condition:"Good", image:"youbecome.jpg", url:"youbecome.html" },
+
+{ id:143, title:"Roger Federer: The Definitive Biography", author:"Chris Bowers", category:"Sports Biography", categories:["Sports Biography","Tennis","Sports","Biography"], condition:"Good", image:"federer.jpg", url:"federer.html" },
+
+{ id:144, title:"The Free Voice", author:"Ravish Kumar", category:"Journalism", categories:["Journalism","Politics","Current Affairs","Media"], condition:"Good", image:"freevoice.jpg", url:"freevoice.html" },
+
+{ id:145, title:"No Spin", author:"Shane Warne", category:"Sports Biography", categories:["Sports Biography","Cricket","Autobiography","Sports"], condition:"Good", image:"nospin.jpg", url:"nospin.html" },
+
+{ id:146, title:"Moeen", author:"Moeen Ali", category:"Sports Biography", categories:["Sports Biography","Cricket","Autobiography","Sports"], condition:"Good", image:"moeen.jpg", url:"moeen.html" },
+
+{ id:147, title:"Keane: The Autobiography", author:"Roy Keane", category:"Sports Biography", categories:["Sports Biography","Football","Autobiography","Sports"], condition:"Good", image:"keane.jpg", url:"keane.html" },
+
+{ id:148, title:"281 and Beyond", author:"VVS Laxman", category:"Sports Biography", categories:["Sports Biography","Cricket","Autobiography","Sports"], condition:"Good", image:"281beyond.jpg", url:"281beyond.html" },
+
+{ id:149, title:"Being Freddie: My Story So Far", author:"Andrew Flintoff", category:"Sports Biography", categories:["Sports Biography","Cricket","Autobiography","Sports"], condition:"Good", image:"beingfreddie.jpg", url:"beingfreddie.html" },
+
+{ id:150, title:"Dreams of a Billion", author:"Boria Majumdar & Nalin Mehta", category:"Sports", categories:["Sports","Cricket","Biography","India"], condition:"Good", image:"dreamsbillion.jpg", url:"dreamsbillion.html" },
+
+{ id:151, title:"Ashes Victory", author:"The England Cricket Team", category:"Cricket", categories:["Cricket","Sports","History"], condition:"Good", image:"ashesvictory.jpg", url:"ashesvictory.html" },
+
+{ id:152, title:"Pele: The Autobiography", author:"Pelé", category:"Sports Biography", categories:["Sports Biography","Football","Autobiography","Sports"], condition:"Good", image:"pele.jpg", url:"pele.html" },
+
+{ id:153, title:"Messi", author:"Guillem Balague", category:"Sports Biography", categories:["Sports Biography","Football","Biography","Sports"], condition:"Good", image:"messi.jpg", url:"messi.html" },
+
+{ id:154, title:"The Life You Imagine", author:"Derek Jeter", category:"Sports Biography", categories:["Sports Biography","Baseball","Autobiography","Sports"], condition:"Good", image:"lifeyouimagine.jpg", url:"lifeyouimagine.html" },
+
+{ id:155, title:"Broadside: How We Regained the Ashes", author:"Stuart Broad", category:"Cricket", categories:["Cricket","Sports","Autobiography"], condition:"Good", image:"broadside.jpg", url:"broadside.html" },
+
+{ id:156, title:"Faf: Through Fire", author:"Faf du Plessis", category:"Sports Biography", categories:["Sports Biography","Cricket","Autobiography","Sports"], condition:"Good", image:"faffire.jpg", url:"faffire.html" },
+
+{ id:157, title:"Watching the Wheels", author:"Damon Hill", category:"Sports Biography", categories:["Sports Biography","Formula 1","Autobiography","Sports"], condition:"Good", image:"watchingwheels.jpg", url:"watchingwheels.html" },
+
+{ id:158, title:"AB: The Autobiography", author:"AB de Villiers", category:"Sports Biography", categories:["Sports Biography","Cricket","Autobiography","Sports"], condition:"Good", image:"abdevilliers.jpg", url:"abdevilliers.html" },
+
+{ id:159, title:"Wizards of Spin", author:"Anindya Dutta", category:"Cricket", categories:["Cricket","Sports","History","Biography"], condition:"Good", image:"wizardsspin.jpg", url:"wizardsspin.html" },
+
+{ id:160, title:"Gerrard: My Autobiography", author:"Steven Gerrard", category:"Sports Biography", categories:["Sports Biography","Football","Autobiography","Sports"], condition:"Good", image:"gerrard.jpg", url:"gerrard.html" },
+
+{ id:161, title:"Crossing the Boundary", author:"Kevin Pietersen", category:"Cricket", categories:["Cricket","Sports","Autobiography"], condition:"Good", image:"crossingboundary.jpg", url:"crossingboundary.html" },
+
+{ id:162, title:"Tested", author:"Pat Cummins", category:"Cricket", categories:["Cricket","Sports Biography","Autobiography","Sports"], condition:"Good", image:"tested.jpeg", url:"tested.html" },
+
+{ id:163, title:"Iconic Indians", author:"Sanjeev Sanyal & Rajesh Singh", category:"Biography", categories:["Biography","History","India","Nonfiction"], condition:"Good", image:"iconicindians.jpg", url:"iconicindians.html" },
+];
+
+// ── CART (uses book id as key — BUG FIX: findBook uses id match not array index) ──
+let cart = JSON.parse(localStorage.getItem("mr99booksCart")) || {};
+
+function findBook(id) {
+  return books.find(b => b.id == id); // == handles string/number mismatch from localStorage keys
+}
+
+// ── BUILD GENRE FILTERS ──
+const genres = [
+  "All",
+  "Self Help",
+  "Psychology",
+  "Business",
+  "Finance",
+  "Technology",
+  "Science",
+  "Biography",
+  "Sports",
+  "Children",
+  "Fantasy",
+  "Classics",
+  "Mystery",
+  "Politics",
+  "Education"
+].sort((a,b) => a === "All" ? -1 : a.localeCompare(b));
+const filterRow = document.getElementById("filterRow");
+filterRow.innerHTML = "";
+genres.forEach(g => {
+  const btn = document.createElement("button");
+  btn.className = "filter-pill" + (g === "All" ? " active" : "");
+  btn.dataset.genre = g;
+  btn.textContent = g;
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    applyFilters();
+  });
+  filterRow.appendChild(btn);
+});
+
+document.getElementById("totalCount").textContent = books.length;
+
+// ── RENDER ──
+const grid = document.getElementById("booksGrid");
+const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const scrollProgress = document.getElementById("scroll-progress");
+
+function updateScrollProgress() {
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+  scrollProgress.style.width = `${pct}%`;
+}
+window.addEventListener("scroll", updateScrollProgress, { passive:true });
+updateScrollProgress();
+
+function enhanceRenderedCards() {
+  if (reduceMotion) return;
+  document.querySelectorAll(".book-card").forEach(card => {
+    card.addEventListener("pointermove", e => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `translateY(-8px) rotateX(${(-y * 3).toFixed(2)}deg) rotateY(${(x * 3).toFixed(2)}deg)`;
+    });
+    card.addEventListener("pointerleave", () => {
+      card.style.transform = "";
+    });
+  });
+}
+
+// applyFilters and renderBooks are defined below (after wishlist/sort/view are set up)
+
+// ── SEARCH ──
+document.getElementById("searchInput").addEventListener("input", () => applyFilters());
+
+// ── CART FUNCTIONS ──
+function saveCart() { localStorage.setItem("mr99booksCart", JSON.stringify(cart)); }
+
+function updateCartCount() {
+  const total = Object.values(cart).reduce((a,b) => a+b, 0);
+  const el = document.getElementById("cart-count");
+  if (total > 0) { el.textContent = total; el.classList.add("visible"); }
+  else           { el.textContent = "";    el.classList.remove("visible"); }
+}
+
+function addToCart(id, btn, isListBtn) {
+  const book = findBook(id);
+  if (!book) return;
+  cart[id] = (cart[id] || 0) + 1;
+  saveCart(); updateCartCount(); renderCartDrawer();
+  showToast(`<span>${book.title}</span> added to cart`);
+  // update whichever button was clicked
+  if (isListBtn) {
+    btn.textContent = "✓ Added"; btn.classList.add("added");
+    setTimeout(() => { btn.textContent = "+ Add to Cart"; btn.classList.remove("added"); }, 1500);
+    const gridBtn = document.getElementById(`btn-${id}`);
+    if (gridBtn) { gridBtn.textContent = "✓ In Cart"; gridBtn.classList.add("added"); setTimeout(() => { gridBtn.textContent = "Add to Cart — ₹99"; gridBtn.classList.remove("added"); }, 1500); }
+  } else {
+    btn.textContent = "✓ Added"; btn.classList.add("added");
+    setTimeout(() => { btn.textContent = "Add to Cart — ₹99"; btn.classList.remove("added"); }, 1500);
+    const listBtn = document.getElementById(`listbtn-${id}`);
+    if (listBtn) { listBtn.textContent = "✓ In Cart"; listBtn.classList.add("added"); setTimeout(() => { listBtn.textContent = "+ Add to Cart"; listBtn.classList.remove("added"); }, 1500); }
+  }
+}
+
+function changeQty(id, delta) {
+  cart[id] = (cart[id] || 0) + delta;
+  if (cart[id] <= 0) delete cart[id];
+  saveCart(); updateCartCount(); renderCartDrawer();
+}
+
+function removeItem(id) {
+  const itemEl = document.querySelector(`.cart-item[data-id="${id}"]`);
+  if (!itemEl) { delete cart[id]; saveCart(); updateCartCount(); renderCartDrawer(); return; }
+  itemEl.classList.add("removing");
+  setTimeout(() => {
+    itemEl.style.height = itemEl.offsetHeight + "px";
+    itemEl.style.overflow = "hidden";
+    void itemEl.offsetWidth; // reflow
+    itemEl.classList.add("collapsing");
+    setTimeout(() => {
+      delete cart[id]; saveCart(); updateCartCount(); renderCartDrawer();
+    }, 280);
+  }, 320);
+}
+
+function renderCartDrawer() {
+  const itemsEl  = document.getElementById("cart-items");
+  const footerEl = document.getElementById("cart-footer");
+  const ids = Object.keys(cart).filter(id => cart[id] > 0);
+  if (ids.length === 0) {
+    itemsEl.innerHTML = `<div class="cart-empty"><div class="empty-icon">📚</div><p>Your cart is empty.<br/>Add some books above!</p></div>`;
+    footerEl.style.display = "none"; return;
+  }
+  let html = ""; let totalQty = 0;
+  ids.forEach(id => {
+    const book = findBook(id); // ← FIXED: finds by id property, not array index
+    if (!book) return;
+    const qty = cart[id]; totalQty += qty;
+    html += `<div class="cart-item" data-id="${book.id}">
+      <div class="cart-item-cover"><img src="${book.image}" alt="${book.title}"></div>
+      <div class="cart-item-info">
+        <div class="cart-item-title">${book.title}</div>
+        <div class="cart-item-author">${book.author}</div>
+        <div class="cart-item-controls">
+          <span class="qty-num">${qty}</span>
+          <button class="remove-item" onclick="removeItem(${book.id})">🗑</button>
+        </div>
+      </div>
+      <div class="cart-item-price">₹${qty*99}</div>
+    </div>`;
+  });
+  itemsEl.innerHTML = html;
+  footerEl.style.display = "block";
+  document.getElementById("cart-total").textContent = `₹${totalQty*99}`;
+  const savings = totalQty > 1 ? `You're saving approx ₹${totalQty*600}+ vs market price!` : "";
+  document.getElementById("cart-savings").textContent = savings;
+}
+
+// ── CART OPEN/CLOSE ──
+function openCart()  { renderCartDrawer(); document.getElementById("cart-overlay").classList.add("open"); document.getElementById("cart-drawer").classList.add("open"); }
+function closeCart() { document.getElementById("cart-overlay").classList.remove("open"); document.getElementById("cart-drawer").classList.remove("open"); }
+document.getElementById("cart-btn").addEventListener("click", openCart);
+document.getElementById("close-cart").addEventListener("click", closeCart);
+document.getElementById("cart-overlay").addEventListener("click", closeCart);
+
+// ── CHECKOUT ──
+function checkout() {
+  const ids = Object.keys(cart).filter(id => cart[id] > 0);
+  if (!ids.length) { alert("Your cart is empty!"); return; }
+  let msg = "Hi! I would like to purchase these books.\n\nName:\n\nAddress:\n\nPincode:\n\nPhone Number:\n\n";
+  ids.forEach(id => {
+    const book = findBook(id);
+    if (!book) return;
+    msg += `Book Title: ${book.title}\nAuthor: ${book.author}\nBook ID: AMS-${String(book.id).padStart(3,"0")}\nPrice: ₹99\nCondition: ${book.condition}\n\n`;
+  });
+  msg += "Please confirm availability and share the shipping-inclusive total.";
+  if (confirm("Your order will be sent via WhatsApp. Continue?")) {
+    cart = {}; localStorage.removeItem("mr99booksCart");
+    updateCartCount(); renderCartDrawer(); closeCart();
+    window.location.href = `https://wa.me/919920291697?text=${encodeURIComponent(msg)}`;
+  }
+}
+
+// ── TOAST ──
+let toastT;
+function showToast(html) {
+  const t = document.getElementById("toast");
+  t.innerHTML = html; t.classList.add("show");
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove("show"), 2500);
+}
+
+// ── WISHLIST ──
+let wishlist = JSON.parse(localStorage.getItem("mr99booksWishlist")) || [];
+
+function saveWishlist() { localStorage.setItem("mr99booksWishlist", JSON.stringify(wishlist)); }
+
+function updateWishlistCount() {
+  const el = document.getElementById("wishlist-count");
+  if (wishlist.length > 0) { el.textContent = wishlist.length; el.classList.add("visible"); }
+  else { el.textContent = ""; el.classList.remove("visible"); }
+}
+
+function isWishlisted(id) { return wishlist.includes(Number(id)); }
+
+function toggleWishlist(id, btn) {
+  const numId = Number(id);
+  const book = findBook(numId);
+  if (!book) return;
+  if (isWishlisted(numId)) {
+    wishlist = wishlist.filter(x => x !== numId);
+    btn.textContent = "🤍";
+    btn.classList.remove("wishlisted");
+    showToast(`<span>${book.title}</span> removed from Saved`);
+  } else {
+    wishlist.push(numId);
+    btn.textContent = "❤️";
+    btn.classList.add("wishlisted");
+    showToast(`<span>${book.title}</span> saved!`);
+  }
+  saveWishlist(); updateWishlistCount(); renderWishlistDrawer();
+}
+
+function renderWishlistDrawer() {
+  const itemsEl  = document.getElementById("wishlist-items");
+  const footerEl = document.getElementById("wishlist-footer");
+  if (wishlist.length === 0) {
+    itemsEl.innerHTML = `<div class="wishlist-empty"><div class="empty-icon">🤍</div><p>No saved books yet.<br/>Click the heart on any book!</p></div>`;
+    footerEl.style.display = "none"; return;
+  }
+  let html = "";
+  wishlist.forEach(id => {
+    const book = findBook(id);
+    if (!book) return;
+    html += `<div class="wishlist-item">
+      <div class="wishlist-item-cover"><img src="${book.image}" alt="${book.title}"></div>
+      <div class="wishlist-item-info">
+        <div class="wishlist-item-title">${book.title}</div>
+        <div class="wishlist-item-author">${book.author}</div>
+        <div class="wishlist-item-actions">
+          <button class="wl-move-btn" onclick="moveToCart(${book.id})">Add to Cart</button>
+          <button class="wl-remove-btn" onclick="removeFromWishlist(${book.id})">🗑</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  itemsEl.innerHTML = html;
+  footerEl.style.display = "block";
+}
+
+function moveToCart(id) {
+  cart[id] = (cart[id] || 0) + 1;
+  saveCart(); updateCartCount(); renderCartDrawer();
+  const book = findBook(id);
+  showToast(`<span>${book.title}</span> added to cart`);
+}
+
+function removeFromWishlist(id) {
+  wishlist = wishlist.filter(x => x !== id);
+  saveWishlist(); updateWishlistCount(); renderWishlistDrawer();
+  // update heart button on card if visible
+  const btn = document.getElementById(`heart-${id}`);
+  if (btn) { btn.textContent = "🤍"; btn.classList.remove("wishlisted"); }
+}
+
+function addAllToCart() {
+  wishlist.forEach(id => { cart[id] = (cart[id] || 0) + 1; });
+  saveCart(); updateCartCount(); renderCartDrawer();
+  showToast(`All saved books added to cart!`);
+}
+
+function openWishlist()  { renderWishlistDrawer(); document.getElementById("wishlist-overlay").classList.add("open"); document.getElementById("wishlist-drawer").classList.add("open"); }
+function closeWishlist() { document.getElementById("wishlist-overlay").classList.remove("open"); document.getElementById("wishlist-drawer").classList.remove("open"); }
+document.getElementById("wishlist-btn").addEventListener("click", openWishlist);
+document.getElementById("close-wishlist").addEventListener("click", closeWishlist);
+document.getElementById("wishlist-overlay").addEventListener("click", closeWishlist);
+
+// ── SORT ──
+function getSortedBooks(list) {
+  const val = document.getElementById("sortSelect").value;
+  const sorted = [...list];
+  if (val === "az")     sorted.sort((a,b) => a.title.localeCompare(b.title));
+  if (val === "za")     sorted.sort((a,b) => b.title.localeCompare(a.title));
+  if (val === "author") sorted.sort((a,b) => a.author.localeCompare(b.author));
+  return sorted;
+}
+document.getElementById("sortSelect").addEventListener("change", applyFilters);
+
+// ── VIEW TOGGLE (GRID / LIST) ──
+document.getElementById("gridViewBtn").addEventListener("click", () => {
+  document.getElementById("booksGrid").classList.remove("list-view");
+  document.getElementById("gridViewBtn").classList.add("active");
+  document.getElementById("listViewBtn").classList.remove("active");
+});
+document.getElementById("listViewBtn").addEventListener("click", () => {
+  document.getElementById("booksGrid").classList.add("list-view");
+  document.getElementById("listViewBtn").classList.add("active");
+  document.getElementById("gridViewBtn").classList.remove("active");
+});
+
+// ── KEYBOARD SHORTCUT: "/" to focus search ──
+document.addEventListener("keydown", e => {
+  if (e.key === "/" && document.activeElement !== document.getElementById("searchInput")) {
+    e.preventDefault();
+    document.getElementById("searchInput").focus();
+  }
+  if (e.key === "Escape") {
+    closeCart(); closeWishlist(); closeModal();
+  }
+});
+
+// ── RANDOM BOOK FAB ──
+let currentRandomBook = null;
+
+function openModal(book) {
+  currentRandomBook = book;
+  document.getElementById("modal-cover").src  = book.image;
+  document.getElementById("modal-cover").alt  = book.title;
+  document.getElementById("modal-title").textContent  = book.title;
+  document.getElementById("modal-author").textContent = "by " + book.author;
+  document.getElementById("modal-overlay").classList.add("open");
+}
+function closeModal() { document.getElementById("modal-overlay").classList.remove("open"); }
+
+function rollDice(callback) {
+  const overlay = document.getElementById("dice-overlay");
+  const cube = document.getElementById("dice-cube");
+  cube.classList.remove("rolling");
+  void cube.offsetWidth; // restart animation
+  overlay.classList.add("show");
+  cube.classList.add("rolling");
+  setTimeout(() => {
+    overlay.classList.remove("show");
+    cube.classList.remove("rolling");
+    callback();
+  }, 1050);
+}
+
+function pickRandom() {
+  rollDice(() => {
+    const idx = Math.floor(Math.random() * books.length);
+    openModal(books[idx]);
+  });
+}
+
+document.getElementById("fab-random").addEventListener("click", pickRandom);
+document.getElementById("modal-close").addEventListener("click", closeModal);
+document.getElementById("modal-overlay").addEventListener("click", e => { if (e.target === document.getElementById("modal-overlay")) closeModal(); });
+document.getElementById("modal-reroll-btn").addEventListener("click", pickRandom);
+document.getElementById("modal-cart-btn").addEventListener("click", () => {
+  if (!currentRandomBook) return;
+  cart[currentRandomBook.id] = (cart[currentRandomBook.id] || 0) + 1;
+  saveCart(); updateCartCount(); renderCartDrawer();
+  showToast(`<span>${currentRandomBook.title}</span> added to cart`);
+  closeModal();
+});
+
+// ── PATCH applyFilters to include sorting ──
+function applyFilters() {
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  const genre = document.querySelector(".filter-pill.active").dataset.genre;
+
+  let filtered = books.filter(book => {
+    const categories = book.categories || [book.category];
+    const matchSearch =
+      !search ||
+      book.title.toLowerCase().includes(search) ||
+      book.author.toLowerCase().includes(search) ||
+      categories.some(cat => cat.toLowerCase().includes(search));
+    const matchGenre =
+      genre === "All" || genre === "all" ||
+      categories.includes(genre);
+    return matchSearch && matchGenre;
+  });
+
+  filtered = getSortedBooks(filtered);
+  renderBooks(filtered);
+}
+
+// ── PATCH renderBooks to inject heart buttons ──
+function renderBooks(list) {
+  if (list.length === 0) {
+    grid.innerHTML = `<div class="no-results">
+      <div class="no-results-icon">🔍</div>
+      <h3>No books found</h3>
+      <p>Try a different search or filter</p>
+    </div>`;
+    document.getElementById("resultCount").innerHTML = `<strong>0</strong> books found`;
+    return;
+  }
+  grid.innerHTML = "";
+  list.forEach((book, i) => {
+    const inCart = cart[book.id] > 0;
+    const isVG   = book.condition === "Very Good";
+    const wled   = isWishlisted(book.id);
+    const card   = document.createElement("div");
+    card.className = "book-card";
+    card.style.animationDelay = `${Math.min(i * 40, 400)}ms`;
+    card.innerHTML = `
+      <a href="${book.url}" class="book-cover-link">
+        <div class="book-cover">
+          <img src="${book.image}" alt="${book.title}" loading="lazy">
+          <div class="book-cover-overlay">
+            <div class="overlay-view-btn">View Details →</div>
+          </div>
+        </div>
+        <div class="price-stamp">₹99</div>
+      </a>
+      <button class="wishlist-btn${wled ? ' wishlisted' : ''}" id="heart-${book.id}"
+        onclick="toggleWishlist(${book.id}, this)">${wled ? '❤️' : '🤍'}</button>
+      <div class="book-info">
+        <div class="book-title">${book.title}</div>
+        <div class="book-author">by ${book.author}</div>
+        <div class="book-genre-tag">${book.category}</div>
+        <div class="book-condition">
+          <span class="condition-dot${isVG ? ' vg' : ''}"></span>
+          Condition: ${book.condition}
+        </div>
+        <button class="add-to-cart-btn${inCart ? ' added' : ''}" id="btn-${book.id}"
+          onclick="addToCart(${book.id}, this)">
+          ${inCart ? "✓ In Cart" : "Add to Cart — ₹99"}
+        </button>
+        <div class="list-right">
+          <div class="list-price">₹99</div>
+          <div class="list-condition">
+            <span class="condition-dot${isVG ? ' vg' : ''}"></span>${book.condition}
+          </div>
+          <button class="list-cart-btn${inCart ? ' added' : ''}" id="listbtn-${book.id}"
+            onclick="addToCart(${book.id}, this, true)">
+            ${inCart ? "✓ In Cart" : "+ Add to Cart"}
+          </button>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+  enhanceRenderedCards();
+  document.getElementById("resultCount").innerHTML =
+    `Showing <strong>${list.length}</strong> of <strong>${books.length}</strong> books`;
+}
+
+// ── SPARKLE CURSOR TRAIL ──
+const sparkleColors = ["#C9973A","#D4533A","#f0c864","#fff","#9B59B6"];
+let lastSparkle = 0;
+document.addEventListener("mousemove", e => {
+  const now = Date.now();
+  if (now - lastSparkle < 60) return;
+  lastSparkle = now;
+  const s = document.createElement("div");
+  s.className = "sparkle";
+  s.style.left = e.clientX + "px";
+  s.style.top  = e.clientY + "px";
+  s.style.background = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+  s.style.width = s.style.height = (4 + Math.random() * 6) + "px";
+  document.body.appendChild(s);
+  setTimeout(() => s.remove(), 700);
+});
+
+// ── MINI CONFETTI BURST on add-to-cart ──
+function burstConfetti(x, y, count = 20) {
+  const colors = ["#C9973A","#D4533A","#f0c864","#2a7a2a","#9B59B6"];
+  for (let i = 0; i < count; i++) {
+    const c = document.createElement("div");
+    c.className = "mini-confetti";
+    c.style.left = x + "px"; c.style.top = y + "px";
+    c.style.background = colors[i % colors.length];
+    c.style.borderRadius = i % 2 === 0 ? "2px" : "50%";
+    c.style.width = c.style.height = (8 + Math.random() * 8) + "px";
+    const angle = (Math.PI * 2 / count) * i + (Math.random() * 0.3);
+    const dist  = 75 + Math.random() * 80;
+    c.style.setProperty("--tx", Math.cos(angle) * dist + "px");
+    c.style.setProperty("--ty", Math.sin(angle) * dist - 20 + "px");
+    c.style.setProperty("--r",  Math.random() * 420 + "deg");
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 1550);
+  }
+}
+
+// ── RIPPLE RING on add-to-cart ──
+function spawnRipple(x, y) {
+  const r = document.createElement("div");
+  r.className = "add-ripple";
+  r.style.left = x + "px"; r.style.top = y + "px";
+  document.body.appendChild(r);
+  setTimeout(() => r.remove(), 1050);
+}
+
+// ── FLOATING +1 on add-to-cart ──
+function spawnPlusOne(x, y) {
+  const p = document.createElement("div");
+  p.className = "float-plus1";
+  p.textContent = "+1";
+  p.style.left = x + "px"; p.style.top = (y - 14) + "px";
+  document.body.appendChild(p);
+  setTimeout(() => p.remove(), 1550);
+}
+
+// ── COIN THAT FLIES FROM BUTTON TO CART ICON ──
+function flyToCart(startX, startY) {
+  const cartBtn = document.getElementById("cart-btn");
+  const rect = cartBtn.getBoundingClientRect();
+  const endX = rect.left + rect.width / 2;
+  const endY = rect.top + rect.height / 2;
+  const dx = endX - startX, dy = endY - startY;
+  const coin = document.createElement("div");
+  coin.className = "fly-to-cart";
+  coin.textContent = "₹";
+  coin.style.left = startX + "px"; coin.style.top = startY + "px";
+  coin.style.setProperty("--dx", dx + "px");
+  coin.style.setProperty("--dy", dy + "px");
+  coin.style.setProperty("--midX", (dx * 0.5) + "px");
+  coin.style.setProperty("--midY", (dy * 0.5 - 90) + "px");
+  document.body.appendChild(coin);
+  setTimeout(() => coin.remove(), 1100);
+  setTimeout(() => {
+    cartBtn.classList.remove("cart-pulse");
+    void cartBtn.offsetWidth;
+    cartBtn.classList.add("cart-pulse");
+    setTimeout(() => cartBtn.classList.remove("cart-pulse"), 1150);
+  }, 1020);
+  return { endX, endY };
+}
+
+// ── BOOK COVER THAT FLIES FROM CARD TO CART ICON ──
+function flyBookCover(startX, startY, imgSrc, endX, endY) {
+  if (!imgSrc) return;
+  const dx = endX - startX, dy = endY - startY;
+  const cover = document.createElement("img");
+  cover.src = imgSrc;
+  cover.className = "fly-cover";
+  cover.style.left = startX + "px"; cover.style.top = startY + "px";
+  cover.style.setProperty("--dx", dx + "px");
+  cover.style.setProperty("--dy", dy + "px");
+  cover.style.setProperty("--midX", (dx * 0.5) + "px");
+  cover.style.setProperty("--midY", (dy * 0.5 - 110) + "px");
+  document.body.appendChild(cover);
+  setTimeout(() => cover.remove(), 1200);
+  spawnTrail(startX, startY, endX, endY);
+}
+
+// ── SPARKLE TRAIL FOLLOWING THE FLIGHT PATH ──
+function spawnTrail(startX, startY, endX, endY) {
+  const duration = 1150, steps = 5;
+  for (let i = 1; i <= steps; i++) {
+    const t = i / steps;
+    setTimeout(() => {
+      const x = startX + (endX - startX) * t;
+      const y = startY + (endY - startY) * t - Math.sin(Math.PI * t) * 95;
+      const s = document.createElement("div");
+      s.className = "sparkle";
+      s.style.left = x + "px"; s.style.top = y + "px";
+      s.style.background = sparkleColors[i % sparkleColors.length];
+      s.style.width = s.style.height = (7 + Math.random() * 7) + "px";
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 700);
+    }, duration * t);
+  }
+}
+
+// Patch addToCart with a fuller, more elaborate celebration sequence
+const _origAddToCart = addToCart;
+addToCart = function(id, btn, isListBtn) {
+  _origAddToCart(id, btn, isListBtn);
+  const rect = btn.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+  const cartBtn = document.getElementById("cart-btn");
+  const cartCountEl = document.getElementById("cart-count");
+
+  // 1. immediate burst + ripples at the click point
+  burstConfetti(cx, cy);
+  spawnRipple(cx, cy);
+  setTimeout(() => spawnRipple(cx, cy), 220);
+  spawnPlusOne(cx, cy);
+
+  // 2. lift + glow the whole book card
+  const card = btn.closest(".book-card");
+  if (card) {
+    card.classList.remove("cart-lift");
+    void card.offsetWidth;
+    card.classList.add("cart-lift");
+    setTimeout(() => card.classList.remove("cart-lift"), 1050);
+  }
+
+  // 3. button squish-pop
+  btn.classList.remove("pop");
+  void btn.offsetWidth;
+  btn.classList.add("pop");
+  setTimeout(() => btn.classList.remove("pop"), 750);
+
+  // 4. coin + book cover both fly to the cart icon
+  const { endX, endY } = flyToCart(cx, cy);
+  const coverImg = card ? card.querySelector(".book-cover img") : null;
+  flyBookCover(cx, cy, coverImg ? coverImg.src : null, endX, endY);
+
+  // 5. cart icon reacts: shake, wiggle, glow, badge bump — and a second
+  //    smaller confetti wave right as everything "lands"
+  cartBtn.classList.remove("cart-shake");
+  void cartBtn.offsetWidth;
+  cartBtn.classList.add("cart-shake");
+  setTimeout(() => cartBtn.classList.remove("cart-shake"), 650);
+
+  setTimeout(() => {
+    cartBtn.classList.remove("cart-wiggle");
+    void cartBtn.offsetWidth;
+    cartBtn.classList.add("cart-wiggle");
+    setTimeout(() => cartBtn.classList.remove("cart-wiggle"), 900);
+
+    cartCountEl.classList.remove("count-bump");
+    void cartCountEl.offsetWidth;
+    cartCountEl.classList.add("count-bump");
+    setTimeout(() => cartCountEl.classList.remove("count-bump"), 900);
+
+    burstConfetti(endX, endY, 10);
+  }, 1050);
+
+  updateBrowseStreak();
+};
+
+// ── DAILY VISIT STREAK ──
+const STREAK_MILESTONES = [
+  { day: 1,  icon: '📖', benefit: 'Welcome back! You opened your reading streak.' },
+  { day: 2,  icon: '✨', benefit: 'Early bird! Mention code STREAK2 for free bookmark on your order.' },
+  { day: 3,  icon: '🎯', benefit: '3-day reader! DM us on WhatsApp for a surprise book recommendation.' },
+  { day: 5,  icon: '⭐', benefit: '5-day fan! You get priority order confirmation on WhatsApp.' },
+  { day: 7,  icon: '🏅', benefit: '1-week streak! Mention STREAKWEEK for ₹10 off on your next order.' },
+  { day: 14, icon: '🔖', benefit: '2-week legend! Mention STREAKWEEK2 for free shipping on your next order.' },
+  { day: 30, icon: '👑', benefit: '30-day champion! Mention MRSTREAK30 for ₹25 off your next order.' },
+];
+
+(function () {
+  const today     = new Date().toISOString().slice(0, 10);
+  const lastVisit = localStorage.getItem('mr99LastVisit');
+  let   streak    = parseInt(localStorage.getItem('mr99DayStreak') || '0');
+
+  if (!lastVisit) {
+    streak = 1;
+  } else if (lastVisit === today) {
+    // same day — keep streak
+  } else {
+    const yesterday = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+    streak = (lastVisit === yesterday) ? streak + 1 : 1;
+  }
+
+  localStorage.setItem('mr99LastVisit', today);
+  localStorage.setItem('mr99DayStreak', streak);
+
+  document.getElementById('streakNum').textContent     = streak;
+  document.getElementById('streakPopupDays').textContent = streak;
+  if (streak >= 1) document.getElementById('streakBadge').classList.add('visible');
+
+  // Build milestones list
+  const container = document.getElementById('streakMilestones');
+  STREAK_MILESTONES.forEach(m => {
+    const unlocked = streak >= m.day;
+    const div = document.createElement('div');
+    div.className = 'streak-milestone';
+    div.innerHTML = `
+      <div class="sm-icon ${unlocked ? 'unlocked' : 'locked'}">${m.icon}</div>
+      <div class="sm-text">
+        <div class="sm-day ${unlocked ? '' : 'locked-day'}">Day ${m.day}</div>
+        <div class="sm-desc ${unlocked ? '' : 'locked-desc'}">${unlocked ? m.benefit : 'Keep visiting daily to unlock…'}</div>
+      </div>`;
+    container.appendChild(div);
+  });
+
+  // Footer: next milestone info
+  const next = STREAK_MILESTONES.find(m => m.day > streak);
+  const footer = document.getElementById('streakFooter');
+  if (next) {
+    const days = next.day - streak;
+    footer.textContent = `Come back tomorrow! ${days} more day${days > 1 ? 's' : ''} to unlock your next reward 🎁`;
+  } else {
+    footer.textContent = `You've unlocked every reward — you're a true bookworm! 👑`;
+  }
+})();
+
+function openStreakPopup() {
+  document.getElementById('streakOverlay').classList.add('open');
+  document.getElementById('streakPopup').classList.add('open');
+}
+function closeStreakPopup() {
+  document.getElementById('streakOverlay').classList.remove('open');
+  document.getElementById('streakPopup').classList.remove('open');
+}
+
+// ── BROWSING TICKER ──
+let browseCount = parseInt(sessionStorage.getItem('mr99browse') || '0');
+let streakTimer = null;
+
+function updateBrowseStreak() {
+  browseCount++;
+  sessionStorage.setItem('mr99browse', browseCount);
+  document.getElementById('browseCount').textContent = browseCount;
+  const ticker = document.getElementById('browseTicker');
+  ticker.classList.add('visible');
+  clearTimeout(streakTimer);
+  streakTimer = setTimeout(() => {
+    ticker.classList.remove('visible');
+  }, 3000);
+}
+
+// Track card hovers for browse count
+document.getElementById('booksGrid').addEventListener('mouseover', e => {
+  const card = e.target.closest('.book-card');
+  if (!card || card._tracked) return;
+  card._tracked = true;
+  browseCount++;
+  sessionStorage.setItem('mr99browse', browseCount);
+  document.getElementById('browseCount').textContent = browseCount;
+  const ticker = document.getElementById('browseTicker');
+  ticker.classList.add('visible');
+  clearTimeout(streakTimer);
+  streakTimer = setTimeout(() => ticker.classList.remove('visible'), 2500);
+});
+
+// ── LIST VIEW: click card title to peek at categories ──
+document.getElementById("booksGrid").addEventListener("click", e => {
+  const title = e.target.closest(".book-title");
+  if (!title) return;
+  const card = title.closest(".book-card");
+  if (!card || !document.getElementById("booksGrid").classList.contains("list-view")) return;
+  card.classList.toggle("peeked");
+  // inject blurb if not there
+  let blurb = card.querySelector(".peek-blurb");
+  if (!blurb) {
+    const bookInfo = card.querySelector(".book-info");
+    const id = card.querySelector(".add-to-cart-btn")?.id?.replace("btn-","");
+    const book = id ? findBook(id) : null;
+    if (book) {
+      blurb = document.createElement("div");
+      blurb.className = "peek-blurb";
+      blurb.textContent = "🏷 " + (book.categories || [book.category]).join(" · ");
+      bookInfo.appendChild(blurb);
+    }
+  }
+});
+
+// ── INIT ──
+applyFilters();
+updateCartCount();
+renderCartDrawer();
+updateWishlistCount();
+renderWishlistDrawer();
+</script>
+</body>
+</html>

@@ -1,0 +1,2367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mr99Books — Every Book ₹99</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:  #1A1B2E;
+      --cream: #F5EDD6;
+      --ochre: #C9973A;
+      --rust:  #D4533A;
+      --white: #FAFAF7;
+      --grey:  #6B6B7B;
+      --light: #EDE5CE;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background:
+        linear-gradient(90deg, rgba(26,27,46,0.035) 1px, transparent 1px) 0 0 / 34px 34px,
+        linear-gradient(0deg, rgba(26,27,46,0.025) 1px, transparent 1px) 0 0 / 34px 34px,
+        var(--cream);
+      color: var(--navy);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      background:
+        linear-gradient(120deg, rgba(201,151,58,0.08), transparent 28%),
+        linear-gradient(300deg, rgba(212,83,58,0.055), transparent 30%);
+    }
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--ochre), var(--rust));
+      z-index: 500;
+      box-shadow: 0 0 16px rgba(201,151,58,0.5);
+      transition: width 0.08s linear;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--navy);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5vw;
+      height: 64px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+      animation: navDrop 0.65s ease both;
+    }
+    nav::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,151,58,0.75), transparent);
+      opacity: 0.7;
+    }
+    @keyframes navDrop {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--cream);
+      letter-spacing: -0.5px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .logo:hover { opacity: 0.9; transform: translateY(-1px); }
+    .logo span { color: var(--ochre); }
+    .nav-right { display: flex; align-items: center; gap: 24px; }
+    .nav-link {
+      color: #aaa;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1.5px;
+      background: var(--ochre);
+      transition: width 0.25s;
+    }
+    .nav-link:hover { color: var(--cream); }
+    .nav-link:hover::after { width: 100%; }
+
+    #cart-btn {
+      background: var(--ochre);
+      color: var(--navy);
+      border: none;
+      padding: 8px 18px;
+      border-radius: 2px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+    #cart-btn::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(110deg, transparent 0 35%, rgba(255,255,255,0.35) 50%, transparent 65% 100%);
+      transform: translateX(-120%);
+      transition: transform 0.5s ease;
+    }
+    #cart-btn:hover::before { transform: translateX(120%); }
+    #cart-btn:hover { background: #dba93f; transform: translateY(-1px); }
+    #cart-btn.bump { animation: cartBump 0.55s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes cartBump {
+      0%   { transform: translateY(0) rotate(0deg) scale(1); }
+      25%  { transform: translateY(-3px) rotate(-8deg) scale(1.12); }
+      50%  { transform: translateY(0) rotate(6deg) scale(1.08); }
+      75%  { transform: translateY(-1px) rotate(-3deg) scale(1.02); }
+      100% { transform: translateY(0) rotate(0deg) scale(1); }
+    }
+    #cart-count {
+      background: var(--rust);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 1.5s ease infinite;
+      transition: transform 0.2s;
+    }
+    #cart-count.visible { display: flex; }
+    #cart-count.pop { animation: countPop 0.45s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.15); }
+    }
+    @keyframes countPop {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.6); }
+      70%  { transform: scale(0.85); }
+      100% { transform: scale(1); }
+    }
+    .fly-clone {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--navy);
+      color: var(--cream);
+      padding: 90px 5vw 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Subtle grain texture via repeating radial */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 20% 80%, rgba(201,151,58,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(212,83,58,0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      left: 5vw;
+      right: 5vw;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(245,237,214,0.25), transparent);
+      pointer-events: none;
+    }
+
+    /* Floating particles */
+    .hero-particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 1px;
+      opacity: 0.15;
+      animation: float linear infinite;
+      box-shadow: 0 0 12px currentColor;
+    }
+    @keyframes float {
+      0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.15; }
+      90%  { opacity: 0.15; }
+      100% { transform: translateY(-100px) rotate(540deg); opacity: 0; }
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--ochre);
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: slideUp 0.7s ease 0.2s forwards;
+    }
+    .quiz-book-card{
+  display:flex;
+  gap:15px;
+  align-items:center;
+  margin-top:20px;
+  padding:15px;
+  background:rgba(255,255,255,.08);
+  border-radius:10px;
+  text-align:left;
+}
+
+.quiz-book-card img{
+  width:70px;
+  border-radius:6px;
+}
+
+.quiz-book-card h4{
+  color:var(--ochre);
+  margin-bottom:6px;
+}
+
+.quiz-book-card a{
+  color:var(--cream);
+  text-decoration:none;
+  font-weight:700;
+}
+
+.quiz-book-card a:hover{
+  color:var(--ochre);
+}
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: slideUp 0.7s ease 0.4s forwards;
+    }
+    .hero h1 em {
+      color: transparent;
+      font-style: italic;
+      background: linear-gradient(90deg, var(--ochre), #f0c864, var(--ochre));
+      -webkit-background-clip: text;
+      background-clip: text;
+      background-size: 180% 100%;
+      animation: goldSweep 4s ease-in-out infinite;
+    }
+    @keyframes goldSweep {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .hero-desc {
+      color: #b8b5aa;
+      font-size: 1rem;
+      line-height: 1.8;
+      max-width: 440px;
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: slideUp 0.7s ease 0.6s forwards;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--rust);
+      color: white;
+      padding: 15px 30px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      opacity: 0;
+      animation: slideUp 0.7s ease 0.8s forwards;
+      box-shadow: 0 4px 20px rgba(212,83,58,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 0 30%, rgba(255,255,255,0.22) 50%, transparent 70% 100%);
+      transform: translateX(-120%);
+      transition: transform 0.55s ease;
+    }
+    .hero-cta:hover::before { transform: translateX(120%); }
+    .hero-cta:hover {
+      background: #c04733;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(212,83,58,0.45);
+    }
+    .hero-cta .arrow {
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+    .hero-cta:hover .arrow { transform: translateX(4px); }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 44px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      opacity: 0;
+      animation: slideUp 0.7s ease 1s forwards;
+    }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.1rem;
+      font-weight: 900;
+      color: var(--ochre);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label { font-size: 0.75rem; color: #777; text-transform: uppercase; letter-spacing: 1.5px; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero visual — book spine stack */
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 10px;
+      height: 300px;
+      position: relative;
+      z-index: 1;
+      perspective: 800px;
+    }
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      bottom: 7px;
+      left: 50%;
+      width: min(430px, 92%);
+      height: 16px;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, transparent, rgba(0,0,0,0.45), transparent);
+      filter: blur(8px);
+      opacity: 0.65;
+    }
+    .hero-visual::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: min(450px, 96%);
+      height: 10px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #6f4528, #c9973a, #4d2d1f);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    .book-spine {
+      border-radius: 3px 0 0 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.65);
+      cursor: default;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s;
+      flex-shrink: 0;
+      box-shadow: 2px 4px 12px rgba(0,0,0,0.4);
+      opacity: 0;
+      animation: spineRise 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;
+      position: relative;
+      overflow: hidden;
+      transform-origin: bottom center;
+    }
+    .book-spine::before {
+      content: '';
+      position: absolute;
+      inset: 0 auto 0 4px;
+      width: 2px;
+      background: rgba(255,255,255,0.18);
+    }
+    .book-spine::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(100deg, rgba(255,255,255,0.22), transparent 38%, rgba(0,0,0,0.18));
+      opacity: 0.7;
+    }
+    .book-spine:hover {
+      transform: translateY(-18px) rotateX(4deg) rotateZ(-1deg) scale(1.05);
+      box-shadow: 4px 16px 30px rgba(0,0,0,0.5);
+      z-index: 2;
+    }
+    @keyframes spineRise {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-strip {
+      background: var(--ochre);
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 11px 0;
+      cursor: default;
+      box-shadow: inset 0 1px rgba(255,255,255,0.25), inset 0 -1px rgba(26,27,46,0.12);
+    }
+    .marquee-inner {
+      display: inline-block;
+      animation: marquee 22s linear infinite;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--navy);
+    }
+    .marquee-strip:hover .marquee-inner { animation-play-state: paused; }
+    .marquee-inner span { margin: 0 20px; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── SECTIONS ── */
+    .section { padding: 70px 5vw; position: relative; }
+    .section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 5vw;
+      right: 5vw;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(26,27,46,0.12), transparent);
+    }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+    .section-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--ochre);
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      position: relative;
+      display: inline-block;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -8px;
+      width: 42px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--ochre), var(--rust));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.55s ease;
+    }
+    .visible .section-title::after,
+    .section-header.visible .section-title::after { transform: scaleX(1); }
+    .section-sub { font-size: 0.85rem; color: var(--grey); margin-top: 6px; }
+
+    /* ── FILTER PILLS ── */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 40px;
+    }
+    .filter-pill {
+      padding: 7px 18px;
+      border: 1.5px solid #c8bfa3;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      background: transparent;
+      color: var(--navy);
+      transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .filter-pill:hover, .filter-pill.active {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: var(--cream);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(26,27,46,0.25);
+    }
+
+    /* ── BOOK GRID ── */
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 28px;
+    }
+    .book-card {
+      background: var(--white);
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s, border-color 0.3s;
+      position: relative;
+      opacity: 0;
+      animation: cardFadeIn 0.5s ease forwards;
+      border: 1px solid rgba(26,27,46,0.07);
+      will-change: transform;
+    }
+    .book-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 6px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.55), transparent 36%, rgba(201,151,58,0.16));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .book-card::after {
+      content: '';
+      position: absolute;
+      inset: auto 16px -12px;
+      height: 20px;
+      background: rgba(26,27,46,0.18);
+      filter: blur(13px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .book-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 48px rgba(26,27,46,0.18);
+      border-color: rgba(201,151,58,0.45);
+    }
+    .book-card:hover::before,
+    .book-card:hover::after { opacity: 1; }
+    .book-card.hidden { display: none; }
+
+    .book-cover-link { display: block; text-decoration: none; color: inherit; position: relative; }
+    .book-cover {
+      width: 100%;
+      aspect-ratio: 2/3;
+      overflow: hidden;
+      position: relative;
+    }
+    .book-cover img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    .book-card:hover .book-cover img { transform: scale(1.07); }
+    .book-cover::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 0 38%, rgba(255,255,255,0.36) 48%, transparent 58% 100%);
+      transform: translateX(-130%);
+      transition: transform 0.7s ease;
+      pointer-events: none;
+    }
+    .book-card:hover .book-cover::after { transform: translateX(130%); }
+
+    .book-cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(26,27,46,0.8) 0%, rgba(26,27,46,0.3) 50%, transparent 100%);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 16px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .book-card:hover .book-cover-overlay { opacity: 1; }
+    .overlay-view-btn {
+      background: var(--cream);
+      color: var(--navy);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      padding: 8px 20px;
+      border-radius: 2px;
+      transform: translateY(8px);
+      transition: transform 0.3s;
+      pointer-events: none;
+    }
+    .book-card:hover .overlay-view-btn { transform: translateY(0); }
+
+    .price-stamp {
+      position: absolute;
+      top: 12px; right: 12px;
+      background: var(--ochre);
+      color: var(--navy);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 2px;
+      transform: rotate(2deg);
+      z-index: 2;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      animation: stampSettle 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes stampSettle {
+      from { transform: rotate(-8deg) scale(0.85); opacity: 0; }
+      to { transform: rotate(2deg) scale(1); opacity: 1; }
+    }
+
+    .book-info { padding: 14px 14px 16px; }
+    .book-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      color: var(--navy);
+    }
+    .book-author { font-size: 0.75rem; color: var(--grey); margin-bottom: 6px; }
+    .book-genre-tag {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--ochre);
+      background: rgba(201,151,58,0.12);
+      padding: 2px 7px;
+      border-radius: 2px;
+      margin-bottom: 12px;
+    }
+    .book-condition { font-size: 0.7rem; color: var(--grey); margin-bottom: 12px; }
+    .condition-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+    .add-to-cart-btn {
+      width: 100%;
+      background: var(--navy);
+      color: var(--cream);
+      border: none;
+      padding: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.25s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+    .add-to-cart-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 0 36%, rgba(255,255,255,0.18) 50%, transparent 64% 100%);
+      transform: translateX(-120%);
+      transition: transform 0.45s ease;
+    }
+    .add-to-cart-btn:hover::after { transform: translateX(120%); }
+    .add-to-cart-btn:hover { background: var(--rust); transform: translateY(-1px); }
+    .add-to-cart-btn:active { transform: translateY(0) scale(0.97); }
+    .add-to-cart-btn .atc-icon {
+      display: inline-block;
+      font-size: 0.85rem;
+      line-height: 1;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .add-to-cart-btn .atc-text { transition: opacity 0.15s; }
+    .add-to-cart-btn.clicked .atc-icon { animation: cartToss 0.5s ease; }
+    @keyframes cartToss {
+      0%   { transform: translateY(0) rotate(0deg); }
+      30%  { transform: translateY(-5px) rotate(-18deg); }
+      60%  { transform: translateY(1px) rotate(8deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+    .add-to-cart-btn.added {
+      background: #2a7a2a;
+      animation: addedPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .add-to-cart-btn.added .atc-icon {
+      animation: checkPop 0.45s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes addedPop {
+      0%   { transform: scale(1); }
+      45%  { transform: scale(1.045); }
+      100% { transform: scale(1); }
+    }
+    @keyframes checkPop {
+      0%   { transform: scale(0) rotate(-45deg); opacity: 0; }
+      60%  { transform: scale(1.3) rotate(0deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    /* ── WHY STRIP ── */
+    .why-strip {
+      background: var(--navy);
+      color: var(--cream);
+      padding: 56px 5vw;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .why-strip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(201,151,58,0.08), transparent);
+      transform: translateX(-100%);
+      animation: slowSweep 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes slowSweep {
+      0%, 30% { transform: translateX(-100%); }
+      70%, 100% { transform: translateX(100%); }
+    }
+    .why-item {
+      text-align: center;
+      padding: 24px 20px;
+      border-radius: 6px;
+      transition: background 0.3s, transform 0.3s;
+      position: relative;
+      z-index: 1;
+    }
+    .why-item:hover {
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-4px);
+    }
+    .why-icon {
+      font-size: 2.4rem;
+      margin-bottom: 14px;
+      display: block;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .why-item:hover .why-icon { transform: scale(1.2) rotate(-5deg); }
+    .why-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .why-text { font-size: 0.82rem; color: #9994a6; line-height: 1.65; }
+
+    /* ── HOW IT WORKS ── */
+    .how-section { background: var(--light); padding: 72px 5vw; }
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 24px;
+      margin-top: 44px;
+    }
+    .how-step {
+      background: var(--white);
+      padding: 30px 24px;
+      border-radius: 6px;
+      position: relative;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
+      border-bottom: 3px solid transparent;
+      overflow: hidden;
+    }
+    .how-step::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--ochre), var(--rust));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s ease;
+    }
+    .how-step:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(26,27,46,0.12);
+      border-bottom-color: var(--ochre);
+    }
+    .how-step:hover::before { transform: scaleX(1); }
+    .step-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.2rem;
+      font-weight: 900;
+      color: rgba(26,27,46,0.06);
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+    .step-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 8px; }
+    .step-text { font-size: 0.82rem; color: var(--grey); line-height: 1.65; }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      filter: blur(6px);
+      transition: opacity 0.65s ease, transform 0.65s ease, filter 0.65s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    /* ── CART DRAWER ── */
+    .cart-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+      backdrop-filter: blur(2px);
+    }
+    .cart-overlay.open { opacity: 1; pointer-events: all; }
+    .cart-drawer {
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: 380px; max-width: 95vw;
+      background: var(--white);
+      z-index: 201;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+      display: flex; flex-direction: column;
+      box-shadow: -8px 0 40px rgba(0,0,0,0.2);
+    }
+    .cart-drawer.open { transform: translateX(0); animation: drawerSettle 0.42s ease both; }
+    @keyframes drawerSettle {
+      0% { transform: translateX(100%); }
+      72% { transform: translateX(-10px); }
+      100% { transform: translateX(0); }
+    }
+    .cart-header {
+      background: var(--navy);
+      color: var(--cream);
+      padding: 20px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .cart-header h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; }
+    #close-cart {
+      background: none; border: none; color: var(--cream);
+      font-size: 1.5rem; cursor: pointer; line-height: 1;
+      transition: transform 0.2s;
+    }
+    #close-cart:hover { transform: rotate(90deg); }
+    .cart-items { flex: 1; overflow-y: auto; padding: 20px 24px; }
+    .cart-empty { text-align: center; padding: 60px 0; color: var(--grey); }
+    .cart-empty .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+    .cart-empty p { font-size: 0.9rem; }
+    .cart-item {
+      display: flex; gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid #e8e0cc;
+      animation: cartItemIn 0.25s ease;
+    }
+    @keyframes cartItemIn {
+      from { opacity: 0; transform: translateX(10px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .cart-item-cover { width: 44px; height: 64px; border-radius: 2px; flex-shrink: 0; overflow: hidden; }
+    .cart-item-cover img { width: 100%; height: 100%; object-fit: cover; }
+    .cart-item-info { flex: 1; }
+    .cart-item-title { font-family: 'Playfair Display', serif; font-size: 0.9rem; font-weight: 700; margin-bottom: 2px; }
+    .cart-item-author { font-size: 0.75rem; color: var(--grey); margin-bottom: 8px; }
+    .cart-item-controls { display: flex; align-items: center; gap: 10px; }
+    .qty-btn {
+      width: 24px; height: 24px;
+      border: 1.5px solid #ccc;
+      background: none; border-radius: 2px;
+      cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .qty-btn:hover { border-color: var(--navy); background: var(--navy); color: var(--cream); }
+    .qty-num { font-weight: 600; font-size: 0.85rem; min-width: 20px; text-align: center; }
+    .cart-item-price { font-weight: 700; font-size: 0.95rem; color: var(--ochre); align-self: center; flex-shrink: 0; }
+    .remove-item { background: none; border: none; color: #ccc; cursor: pointer; font-size: 1.1rem; transition: color 0.15s, transform 0.15s; }
+    .remove-item:hover { color: var(--rust); transform: scale(1.2); }
+    .cart-footer { padding: 20px 24px; border-top: 1px solid #e8e0cc; background: var(--white); }
+    .cart-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .cart-total-label { font-size: 0.85rem; color: var(--grey); }
+    .cart-total-amount { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--navy); }
+    .cart-savings { font-size: 0.78rem; color: #2a7a2a; font-weight: 600; margin-bottom: 16px; }
+    .checkout-btn {
+      width: 100%;
+      background: var(--rust);
+      color: white; border: none;
+      padding: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; border-radius: 2px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .checkout-btn:hover { background: #c04733; transform: translateY(-1px); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--navy);
+      color: var(--cream);
+      padding: 12px 24px;
+      border-radius: 4px;
+      font-size: 0.875rem; font-weight: 500;
+      z-index: 300;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      white-space: nowrap;
+      pointer-events: none;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast span { color: var(--ochre); font-weight: 700; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy);
+      color: #7a7a8c;
+      padding: 48px 5vw 28px;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 5vw;
+      right: 5vw;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,151,58,0.55), transparent);
+    }
+    .footer-brand .logo { font-size: 1.3rem; margin-bottom: 12px; display: block; }
+    .footer-brand p { font-size: 0.82rem; line-height: 1.75; max-width: 280px; }
+    .footer-col h4 {
+      color: var(--cream);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .footer-col a {
+      display: block; color: #7a7a8c;
+      text-decoration: none;
+      font-size: 0.82rem; margin-bottom: 9px;
+      transition: color 0.2s, padding-left 0.2s;
+    }
+    .footer-col a:hover { color: var(--cream); padding-left: 6px; }
+    .footer-bottom {
+      background: var(--navy);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 16px 5vw;
+      text-align: center;
+      font-size: 0.75rem; color: #555;
+    }
+
+    /* ── SEARCH BAR ── */
+    .search-wrap {
+      position: relative;
+      max-width: 420px;
+      margin-bottom: 28px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 11px 44px 11px 16px;
+      border: 1.5px solid #c8bfa3;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      background: var(--white);
+      color: var(--navy);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input:focus {
+      border-color: var(--ochre);
+      box-shadow: 0 0 0 3px rgba(201,151,58,0.15);
+    }
+    .search-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      pointer-events: none;
+    }
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--grey);
+      font-size: 0.95rem;
+      display: none;
+      grid-column: 1/-1;
+    }
+    .no-results .no-results-emoji { font-size: 3rem; display: block; margin-bottom: 12px; }
+
+    /* ── BOOK QUIZ ── */
+    .quiz-strip {
+      background: linear-gradient(135deg, #1A1B2E 0%, #2a1f3d 100%);
+      padding: 64px 5vw;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .quiz-strip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,151,58,0.15), transparent 60%);
+      pointer-events: none;
+    }
+    .quiz-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--ochre);
+      margin-bottom: 12px;
+    }
+    .quiz-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900;
+      color: var(--cream);
+      margin-bottom: 8px;
+    }
+    .quiz-subtitle {
+      color: #9994a6;
+      font-size: 0.9rem;
+      margin-bottom: 36px;
+    }
+    .quiz-box {
+      max-width: 560px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Start screen */
+    .quiz-start {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 40px 28px;
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+    .quiz-start.fading { opacity: 0; transform: scale(0.96); }
+    .quiz-start-emoji {
+      font-size: 2.6rem;
+      margin-bottom: 14px;
+      display: inline-block;
+      animation: quizFloat 2.6s ease-in-out infinite;
+    }
+    @keyframes quizFloat {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50%      { transform: translateY(-8px) rotate(3deg); }
+    }
+    .quiz-start-text {
+      color: #c9c5d6;
+      font-size: 0.92rem;
+      max-width: 360px;
+      margin: 0 auto 22px;
+      line-height: 1.6;
+    }
+    .quiz-start-btn {
+      background: linear-gradient(90deg, var(--ochre), var(--rust));
+      color: var(--navy);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.92rem;
+      border: none;
+      padding: 13px 28px;
+      border-radius: 100px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 22px rgba(201,151,58,0.3);
+    }
+    .quiz-start-btn::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(110deg, transparent 0 35%, rgba(255,255,255,0.5) 50%, transparent 65% 100%);
+      transform: translateX(-130%);
+      transition: transform 0.6s ease;
+    }
+    .quiz-start-btn:hover::before { transform: translateX(130%); }
+    .quiz-start-btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 12px 28px rgba(201,151,58,0.4); }
+    .quiz-start-btn .arrow { transition: transform 0.2s; }
+    .quiz-start-btn:hover .arrow { transform: translateX(3px); }
+
+    /* Progress + step label */
+    .quiz-progress-wrap { margin-bottom: 22px; }
+    .quiz-progress-bar {
+      width: 100%;
+      height: 5px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+    .quiz-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--ochre), var(--rust));
+      border-radius: 3px;
+      transition: width 0.5s cubic-bezier(0.22,1,0.36,1);
+      box-shadow: 0 0 10px rgba(201,151,58,0.7);
+      position: relative;
+    }
+    .quiz-progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0; width: 14px;
+      background: rgba(255,255,255,0.55);
+      filter: blur(4px);
+    }
+    .quiz-step-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #847fa0;
+    }
+
+    /* Sliding question/options block */
+    .quiz-slide {
+      transition: transform 0.32s cubic-bezier(0.22,1,0.36,1), opacity 0.32s ease;
+    }
+    .quiz-slide.no-transition { transition: none !important; }
+    .quiz-slide.exiting { transform: translateX(-26px); opacity: 0; }
+    .quiz-slide.entering { transform: translateX(26px); opacity: 0; }
+
+    .quiz-question-icon {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+      display: block;
+      animation: quizIconPop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes quizIconPop {
+      from { opacity: 0; transform: scale(0.5) rotate(-12deg); }
+      to   { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+    .quiz-question {
+      color: var(--cream);
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      min-height: 32px;
+    }
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .quiz-opt {
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      color: #ccc;
+      padding: 13px 16px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: quizOptIn 0.35s ease both;
+    }
+    @keyframes quizOptIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .quiz-opt::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(110deg, transparent 0 35%, rgba(255,255,255,0.25) 50%, transparent 65% 100%);
+      transform: translateX(-130%);
+      transition: transform 0.5s ease;
+      pointer-events: none;
+    }
+    .quiz-opt:hover::after { transform: translateX(130%); }
+    .quiz-opt:hover {
+      background: rgba(201,151,58,0.18);
+      border-color: var(--ochre);
+      color: var(--cream);
+      transform: translateY(-2px) scale(1.015);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+    }
+    .quiz-opt.dimmed { opacity: 0.35; transform: none; pointer-events: none; }
+    .quiz-opt.selected {
+      background: linear-gradient(90deg, var(--ochre), var(--rust));
+      border-color: var(--ochre);
+      color: var(--navy);
+      font-weight: 700;
+      opacity: 1;
+      transform: scale(1.04);
+      box-shadow: 0 10px 24px rgba(201,151,58,0.45);
+      animation: quizSelectPulse 0.45s ease;
+    }
+    @keyframes quizSelectPulse {
+      0%   { transform: scale(0.97); }
+      55%  { transform: scale(1.07); }
+      100% { transform: scale(1.04); }
+    }
+    .quiz-opts.locked .quiz-opt:not(.selected) { pointer-events: none; }
+
+    /* Result */
+    .quiz-result {
+      --result-color: var(--ochre);
+      background: rgba(201,151,58,0.12);
+      border: 1px solid color-mix(in srgb, var(--result-color) 45%, transparent);
+      border-radius: 12px;
+      padding: 28px 24px;
+      display: none;
+      position: relative;
+      overflow: hidden;
+      animation: resultPop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    .quiz-result::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% -10%, color-mix(in srgb, var(--result-color) 35%, transparent), transparent 65%);
+      pointer-events: none;
+    }
+    .quiz-result.show { display: block; }
+    @keyframes resultPop {
+      from { opacity: 0; transform: scale(0.92) translateY(10px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .quiz-result-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+      display: block;
+      position: relative; z-index: 1;
+      animation: quizEmojiBounce 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes quizEmojiBounce {
+      0%   { opacity: 0; transform: scale(0.3) translateY(14px); }
+      60%  { opacity: 1; transform: scale(1.15) translateY(-4px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .quiz-match-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--cream);
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 10px;
+      position: relative; z-index: 1;
+      opacity: 0;
+      animation: quizFadeIn 0.4s ease 0.15s both;
+    }
+    .quiz-result-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--result-color);
+      margin-bottom: 8px;
+      position: relative; z-index: 1;
+      opacity: 0;
+      animation: quizFadeIn 0.4s ease 0.22s both;
+    }
+    .quiz-result-genre {
+      display: inline-block;
+      background: var(--result-color);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 18px;
+      position: relative; z-index: 1;
+      opacity: 0;
+      animation: quizFadeIn 0.4s ease 0.3s both;
+    }
+    .quiz-result-desc {
+      color: #b8b5aa;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      margin-bottom: 18px;
+      position: relative; z-index: 1;
+      opacity: 0;
+      animation: quizFadeIn 0.4s ease 0.38s both;
+    }
+    @keyframes quizFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    #quiz-book-recommendation {
+      position: relative; z-index: 1;
+      opacity: 0;
+      animation: quizFadeIn 0.4s ease 0.46s both;
+    }
+    .quiz-restart-btn {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      color: #aaa;
+      padding: 9px 20px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative; z-index: 1;
+      opacity: 0;
+      animation: quizFadeIn 0.4s ease 0.54s both;
+    }
+    .quiz-restart-btn:hover {
+      border-color: var(--result-color);
+      color: var(--cream);
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.06);
+    }
+
+    @media (max-width: 480px) {
+      .quiz-options { grid-template-columns: 1fr; }
+    }
+
+    /* ── CONFETTI ── */
+
+    .confetti-piece {
+      position: fixed;
+      width: 10px; height: 10px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 9999;
+      animation: confettiFall linear forwards;
+    }
+    @keyframes confettiFall {
+      0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translateY(var(--fall)) rotate(var(--spin)) scale(0.4); opacity: 0; }
+    }
+
+    /* ── CURSOR SPARKLE ── */
+    .sparkle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      font-size: 14px;
+      animation: sparkleFade 0.6s ease forwards;
+    }
+    @keyframes sparkleFade {
+      0%   { opacity: 1; transform: scale(1) translateY(0); }
+      100% { opacity: 0; transform: scale(0.5) translateY(-20px); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 720px) {
+      .hero { grid-template-columns: 1fr; padding: 60px 5vw; }
+      .hero-visual { display: none; }
+      footer { grid-template-columns: 1fr; gap: 28px; }
+      .books-grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 16px; }
+      .hero-stats { gap: 24px; }
+      .nav-right { gap: 12px; }
+      .nav-link { display: none; }
+      #cart-btn { padding: 8px 14px; }
+    }
+  </style>
+</head>
+<body>
+<div class="scroll-progress" id="scroll-progress"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">mr<span>99</span>books</div>
+  <div class="nav-right">
+    <a href="#catalog" class="nav-link">Browse Books</a>
+    <a href="#quiz-strip" class="nav-link">Fun Quiz </a>
+    <button id="cart-btn">🛒 Cart <span id="cart-count"></span></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <!-- Floating particles container -->
+  <div class="hero-particles" id="hero-particles"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Online Only · Ships Across India</p>
+    <h1>Every book in our collection, just <em>₹99.</em></h1>
+    <p class="hero-desc">
+      We're a one-person bookshop run from home. Real books, gently read, loved by someone before you — now looking for their next reader. No store, no overhead, no nonsense.
+    </p>
+    <a href="CATALOGUE2.HTML" class="hero-cta">Browse All Books <span class="arrow">→</span></a>
+
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num" data-target="99">₹99</div>
+        <div class="stat-label">Every single book</div>
+      </div>
+      <div>
+        <div class="stat-num">48hr</div>
+        <div class="stat-label">Dispatch time</div>
+      </div>
+      <div>
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Online & easy</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual" id="hero-spines"></div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <span>Every Book ₹99</span><span>•</span>
+    <span>Second Hand, First Love</span><span>•</span>
+    <span>Ships Across India</span><span>•</span>
+    <span>No Store, No Problem</span><span>•</span>
+    <span>Pre-Loved Books</span><span>•</span>
+    <span>Every Book ₹99</span><span>•</span>
+    <span>Second Hand, First Love</span><span>•</span>
+    <span>Ships Across India</span><span>•</span>
+    <span>No Store, No Problem</span><span>•</span>
+    <span>Pre-Loved Books</span><span>•</span>
+  </div>
+</div>
+
+<!-- CATALOG -->
+<section class="section" id="catalog">
+  <div class="section-header reveal">
+    <div>
+      <p class="section-eyebrow">In Stock & Ready</p>
+      <h2 class="section-title">Available Books</h2>
+      <p class="section-sub">All listed books are in stock at our home — every one ₹99</p>
+    </div>
+  </div>
+
+  <div class="search-wrap reveal">
+    <input type="text" class="search-input" id="book-search" placeholder="Search by title or author…" autocomplete="off" />
+    <span class="search-icon">🔍</span>
+  </div>
+
+  <div class="filters reveal" id="filters">
+    <a href="CATALOGUE2.HTML">
+      <button class="filter-pill active" data-filter="all">Browse All Books &rarr;</button>
+    </a>
+  </div>
+
+  <div class="books-grid" id="books-grid">
+    <div class="no-results" id="no-results">
+      <span class="no-results-emoji">📭</span>
+      No books matched your search. Try a different title or author!
+    </div>
+  </div>
+</section>
+<!-- BOOK PERSONALITY QUIZ -->
+<section class="quiz-strip" id="quiz-strip">
+  <p class="quiz-eyebrow">Just for fun</p>
+  <h2 class="quiz-title">What kind of reader are you?</h2>
+  <p class="quiz-subtitle">
+    Answer a few quick questions and find your perfect genre match.
+  </p>
+
+  <div class="quiz-box" id="quiz-box">
+
+    <div class="quiz-start" id="quiz-start">
+      <span class="quiz-start-emoji">📚</span>
+      <p class="quiz-start-text">4 quick questions. One surprisingly accurate book match. Let's find out what you should read next.</p>
+      <button class="quiz-start-btn" onclick="beginQuiz()">Take the Quiz <span class="arrow">→</span></button>
+    </div>
+
+    <div class="quiz-progress-wrap" id="quiz-progress-wrap" style="display:none">
+      <div class="quiz-progress-bar">
+        <div
+          class="quiz-progress-fill"
+          id="quiz-progress"
+          style="width:0%"
+        ></div>
+      </div>
+      <div class="quiz-step-label" id="quiz-step-label">Question 1 of 4</div>
+    </div>
+
+    <div class="quiz-slide" id="quiz-slide" style="display:none">
+      <span class="quiz-question-icon" id="quiz-q-icon"></span>
+      <div class="quiz-question" id="quiz-q">Loading…</div>
+      <div class="quiz-options" id="quiz-opts"></div>
+    </div>
+
+    <div class="quiz-result" id="quiz-result">
+      <span class="quiz-result-emoji" id="qr-emoji"></span>
+
+      <span class="quiz-match-badge" id="qr-match"></span>
+
+      <div class="quiz-result-title" id="qr-title"></div>
+
+      <div class="quiz-result-genre" id="qr-genre"></div>
+
+      <div class="quiz-result-desc" id="qr-desc"></div>
+
+      <!-- BOOK RECOMMENDATION -->
+      <div id="quiz-book-recommendation"></div>
+
+      <button class="quiz-restart-btn" onclick="startQuiz()">
+        ↩ Try again
+      </button>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div style="max-width:640px" class="reveal">
+    <p class="section-eyebrow">Simple & Transparent</p>
+    <h2 class="section-title">How ordering works</h2>
+  </div>
+  <div class="how-steps">
+    <div class="how-step reveal">
+      <div class="step-num">01</div>
+      <div class="step-title">Browse & Add to Cart</div>
+      <p class="step-text">Pick the books you want. Every book is ₹99, no hidden fees on the book itself.</p>
+    </div>
+    <div class="how-step reveal">
+      <div class="step-num">02</div>
+      <div class="step-title">Place Your Order</div>
+      <p class="step-text">Checkout and share your delivery address. We'll confirm availability via WhatsApp within a few hours.</p>
+    </div>
+    <div class="how-step reveal">
+      <div class="step-num">03</div>
+      <div class="step-title">Pay After Confirmation</div>
+      <p class="step-text">Once confirmed, pay via UPI / bank transfer. We share our UPI ID on confirmation.</p>
+    </div>
+    <div class="how-step reveal">
+      <div class="step-num">04</div>
+      <div class="step-title">We Ship It Out</div>
+      <p class="step-text">Books are packed and dispatched within 48 hours. Tracking shared over WhatsApp.</p>
+    </div>
+  </div>
+</section>
+<!-- WHY US -->
+<div class="why-strip">
+  <div class="why-item reveal">
+    <span class="why-icon">📦</span>
+    <div class="why-title">Carefully Packed</div>
+    <p class="why-text">Every book is bubble-wrapped and packed securely before dispatch. Arrives just as described.</p>
+  </div>
+  <div class="why-item reveal">
+    <span class="why-icon">🇮🇳</span>
+    <div class="why-title">Ships Across India</div>
+    <p class="why-text">We dispatch via Speed Post or courier. Delivery in 3–7 working days depending on your location.</p>
+  </div>
+  <div class="why-item reveal">
+    <span class="why-icon">💬</span>
+    <div class="why-title">Real Human Support</div>
+    <p class="why-text">Message us directly on WhatsApp or email. You'll get a reply from the person who packed your book.</p>
+  </div>
+  <div class="why-item reveal">
+    <span class="why-icon">♻️</span>
+    <div class="why-title">Give Books a Second Life</div>
+    <p class="why-text">Pre-loved books deserve new readers. Every purchase keeps a book out of the bin.</p>
+  </div>
+</div>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand reveal">
+    <span class="logo">mr<span>99</span>books</span>
+    <p>A small, home-run second-hand bookshop. Every book ₹99. We operate entirely online and ship across India.</p>
+    <p style="margin-top:12px;font-size:0.8rem;">📱 WhatsApp: <a href="https://wa.me/919920291697" style="color:var(--ochre);text-decoration:none;">+91 99202 91697</a></p>
+    <p style="font-size:0.8rem;">✉️ Email: <a href="mailto:okjahaanali10@gmail.com" style="color:var(--ochre);text-decoration:none;">okjahaanali10@gmail.com</a></p>
+  </div>
+  <div class="footer-col reveal">
+    <h4>Browse</h4>
+    <a href="#catalog">All Books</a>
+    <a href="#catalog">Fiction</a>
+    <a href="#catalog">Non-Fiction</a>
+    <a href="#catalog">Classics</a>
+    <a href="#catalog">Self-Help</a>
+  </div>
+  <div class="footer-col reveal">
+    <h4>Info</h4>
+    <a href="#how">How It Works</a>
+    <a href="#how">Shipping & Delivery</a>
+    <a href="mailto:okjahaanali10@gmail.com">Contact Us</a>
+    <a href="#">Return Policy</a>
+  </div>
+</footer>
+<div class="footer-bottom">© 2025 mr99books · All books priced at ₹99 · Online only · India</div>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button id="close-cart">×</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <div class="cart-empty">
+      <div class="empty-icon">📚</div>
+      <p>Your cart is empty.<br/>Add some books above!</p>
+    </div>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-amount" id="cart-total">₹0</span>
+    </div>
+    <div class="cart-savings" id="cart-savings"></div>
+    <button class="checkout-btn" onclick="checkout()">Place Order via WhatsApp →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── SCROLL PROGRESS ── */
+  const scrollProgress = document.getElementById('scroll-progress');
+  function updateScrollProgress() {
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+    scrollProgress.style.width = `${progress}%`;
+  }
+  window.addEventListener('scroll', updateScrollProgress, { passive: true });
+  updateScrollProgress();
+
+  /* ── FLOATING PARTICLES ── */
+  const particleContainer = document.getElementById('hero-particles');
+  const particleColors = ['#C9973A','#D4533A','#5B4E8B','#2E7D5B'];
+  for (let i = 0; i < (reduceMotion ? 0 : 22); i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 6 + 3;
+    p.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random() * 100}%;
+      background:${particleColors[Math.floor(Math.random() * particleColors.length)]};
+      color:${particleColors[Math.floor(Math.random() * particleColors.length)]};
+      animation-duration:${Math.random() * 15 + 10}s;
+      animation-delay:${Math.random() * 10}s;
+    `;
+    particleContainer.appendChild(p);
+  }
+
+  /* ── HERO BOOK SPINES ── */
+  const spineData = [
+    { w:28, h:175, bg:'#5B4E8B', label:'Fiction' },
+    { w:22, h:220, bg:'#8B3A3A', label:'Mystery' },
+    { w:32, h:200, bg:'#2E7D5B', label:'Non-Fiction' },
+    { w:18, h:155, bg:'#C9973A', label:'Classic' },
+    { w:26, h:245, bg:'#2A5F8F', label:'Sci-Fi' },
+    { w:20, h:190, bg:'#7A4A6B', label:'Self-Help' },
+    { w:30, h:210, bg:'#3A2020', label:'Thriller' },
+    { w:24, h:170, bg:'#1A4A6B', label:'History' },
+  ];
+  const heroSpines = document.getElementById('hero-spines');
+  spineData.forEach((s, i) => {
+    const spine = document.createElement('div');
+    spine.className = 'book-spine';
+    spine.style.cssText = `width:${s.w}px;height:${s.h}px;background:${s.bg};animation-delay:${0.9 + i*0.08}s;`;
+    spine.textContent = s.label;
+    heroSpines.appendChild(spine);
+  });
+let clicks=0;
+
+document.querySelector(".logo").onclick=()=>{
+  clicks++;
+
+  if(clicks===5){
+    showToast("📚 Secret Reader Unlocked!");
+    createConfetti();
+    clicks=0;
+  }
+};
+  /* ── BOOK DATA ── */
+  const books = [
+    { id:108,  title:"Supernormal",                              image:"super.jpg",      author:"Meg Jay",                   category:"Psychology", condition:"Good", conditionColor:"#C9973A", color:"#6A3D8F", link:"supernormal.html" },
+    { id:109,  title:"The Almanack of Naval Ravikant",           image:"almanack.jpg",   author:"Eric Jorgenson",            category:"Self Help",  condition:"Good", conditionColor:"#C9973A", color:"#1A4A6B", link:"almanack.html" },
+    { id:110,  title:"Percy Jackson and the Lightning Thief",    image:"percy.jpg",      author:"Rick Riordan",              category:"Fantasy",    condition:"Good", conditionColor:"#C9973A", color:"#2A5F8F", link:"percy.html" },
+    { id:112,  title:"A Life in Full Flight",                    image:"flight.jpg",     author:"Alan Ruddock",              category:"Biography",  condition:"Good", conditionColor:"#C9973A", color:"#2E5E8E", link:"flight.html" },
+    { id:115,  title:"Learned Optimism",                         image:"optimism.jpg",   author:"Martin E.P. Seligman",      category:"Psychology", condition:"Good", conditionColor:"#C9973A", color:"#4A6741", link:"optimism.html" },
+    { id:118, title:"The Three Lives of the Kaiser",            image:"kaiser.webp",    author:"Uli Hesse",                 category:"Football",   condition:"Good", conditionColor:"#C9973A", color:"#1A5276", link:"kaiser.html" },
+    { id:119, title:"The Unique Indian Market",                 image:"indmarket.jpg",  author:"Prateek Jain",              category:"Business",   condition:"Good", conditionColor:"#C9973A", color:"#784212", link:"indmarket.html" },
+    { id:122, title:"The Boy Who Runs",                         image:"boy.jpg",        author:"John Brant",                category:"Biography",  condition:"Good", conditionColor:"#C9973A", color:"#1A5276", link:"boy.html" },
+    { id:124, title:"The Monk Who Sold His Ferrari",            image:"monk.jpg",       author:"Robin Sharma",              category:"Self Help",  condition:"Good", conditionColor:"#C9973A", color:"#7D6608", link:"monk.html" },
+  ];
+
+  /* ── RENDER BOOKS ── */
+  const grid = document.getElementById('books-grid');
+  books.forEach((book, i) => {
+    const card = document.createElement('div');
+    card.className = 'book-card';
+    card.setAttribute('data-category', book.category);
+    card.style.animationDelay = `${i * 0.07}s`;
+    card.innerHTML = `
+      <a class="book-cover-link" href="${book.link}" rel="noopener noreferrer">
+        <div class="book-cover">
+          <img src="${book.image}" alt="${book.title}" loading="lazy">
+          <div class="book-cover-overlay">
+            <div class="overlay-view-btn">View Details</div>
+          </div>
+        </div>
+        <div class="price-stamp">₹99</div>
+      </a>
+      <div class="book-info">
+        <div class="book-title">${book.title}</div>
+        <div class="book-author">${book.author}</div>
+        <div class="book-genre-tag">${book.category}</div>
+        <div class="book-condition">
+          <span class="condition-dot" style="background:${book.conditionColor}"></span>
+          Condition: ${book.condition}
+        </div>
+        <button class="add-to-cart-btn" onclick="addToCart(${book.id}, this)"><span class="atc-icon">🛒</span><span class="atc-text">Add to Cart — ₹99</span></button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  if (!reduceMotion) {
+    document.querySelectorAll('.book-card').forEach(card => {
+      card.addEventListener('pointermove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `translateY(-8px) rotateX(${(-y * 3).toFixed(2)}deg) rotateY(${(x * 3).toFixed(2)}deg)`;
+      });
+      card.addEventListener('pointerleave', () => {
+        card.style.transform = '';
+      });
+    });
+  }
+
+  /* ── FILTERS ── */
+  document.getElementById('filters').addEventListener('click', e => {
+    if (!e.target.classList.contains('filter-pill')) return;
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    e.target.classList.add('active');
+    const filter = e.target.dataset.filter;
+    document.querySelectorAll('.book-card').forEach(card => {
+      card.classList.toggle('hidden', filter !== 'all' && card.dataset.category !== filter);
+    });
+  });
+
+  /* ── SCROLL REVEAL ── */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.transitionDelay = `${i * 0.08}s`;
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  /* ── CART STATE ── */
+  let cart = JSON.parse(localStorage.getItem("mr99booksCart")) || {};
+
+  const catalogueBooks = [
+    { id:101, title:"Mindset",                                   image:"mindset.webp",  author:"Carol S. Dweck",                condition:"Good" },
+    { id:102, title:"The Courage to Be Disliked",                image:"courage.jpg",   author:"Ichiro Kishimi & Fumitake Koga", condition:"Very Good" },
+    { id:103, title:"Einstein For Everyone",                     image:"einstein.jpg",  author:"Robert I. Piccioni",             condition:"Good" },
+    { id:104, title:"Noah's Gold",                               image:"noahs.jpg",     author:"Frank Cottrell-Boyce",           condition:"Good" },
+    { id:105, title:"As a Man Thinketh",                         image:"man.jpg",       author:"James Allen",                    condition:"Very Good" },
+    { id:106, title:"The Conscious Parent",                      image:"parent.jpg",    author:"Shefali Tsabary",                condition:"Good" },
+    { id:107, title:"Same As Ever",                              image:"SAME.webp",     author:"Morgan Housel",                  condition:"Good" },
+    { id:108, title:"Supernormal",                               image:"super.jpg",     author:"Meg Jay",                        condition:"Good" },
+    { id:109, title:"The Almanack of Naval Ravikant",            image:"almanack.jpg",  author:"Eric Jorgenson",                 condition:"Good" },
+    { id:110, title:"Percy Jackson and the Lightning Thief",     image:"percy.jpg",     author:"Rick Riordan",                   condition:"Good" },
+    { id:111, title:"Percy Jackson and the Sea of Monsters",     image:"percy2.webp",   author:"Rick Riordan",                   condition:"Good" },
+    { id:112, title:"A Life in Full Flight",                     image:"flight.jpg",    author:"Alan Ruddock",                   condition:"Good" },
+    { id:113, title:"Mind Master",                               image:"mind.jpg",      author:"Viswanathan Anand",              condition:"Good" },
+    { id:114, title:"Be a People Person",                        image:"ppl.webp",      author:"John C. Maxwell",                condition:"Good" },
+    { id:115, title:"Learned Optimism",                          image:"optimism.jpg",  author:"Martin E.P. Seligman",           condition:"Good" },
+    { id:116, title:"How to Be a Mathemagician",                 image:"math.jpg",      author:"Aditi Singhal & Sudhir Singhal", condition:"Good" },
+    { id:117, title:"A Little Princess",                         image:"princess.jpg",  author:"Frances Hodgson Burnett",        condition:"Good" },
+    { id:118, title:"The Three Lives of the Kaiser",             image:"kaiser.webp",   author:"Uli Hesse",                      condition:"Good" },
+    { id:119, title:"The Unique Indian Market",                  image:"indmarket.jpg", author:"Prateek Jain",                   condition:"Good" },
+    { id:120, title:"The Psychology of Money",                   image:"money.jpg",     author:"Morgan Housel",                  condition:"Good" },
+    { id:121, title:"Fatal Accidents of Birth",                  image:"fatal.jpg",     author:"Harsh Mander",                   condition:"Good" },
+    { id:122, title:"The Boy Who Runs",                          image:"boy.jpg",       author:"John Brant",                     condition:"Good" },
+    { id:123, title:"The Secret Garden",                         image:"secret.jpg",    author:"Frances Hodgson Burnett",        condition:"Good" },
+    { id:124, title:"The Monk Who Sold His Ferrari",             image:"monk.jpg",      author:"Robin Sharma",                   condition:"Good" },
+    { id:125, title:"World's Greatest Puzzle",                   image:"worldpuzzle.jpg",      author:"Charles Barry Townsend",          condition:"Good" },
+    { id:126, title:"Common Yet Uncommon",                       image:"commonuncommon.jpg",    author:"Sudha Murty",                     condition:"Good" },
+    { id:127, title:"The Call of the Wild",                      image:"callwild.jpg",          author:"Jack London",                     condition:"Good" },
+    { id:128, title:"How Innovation Works",                      image:"innovation.jpg",        author:"Matt Ridley",                     condition:"Good" },
+    { id:129, title:"My Journey",                                image:"myjourney.jpg",         author:"A.P.J. Abdul Kalam",              condition:"Good" },
+    { id:130, title:"The 7 Habits of Highly Effective People",   image:"7habits.jpg",           author:"Stephen R. Covey",                condition:"Good" },
+    { id:131, title:"Source Code",                               image:"sourcecode.jpg",        author:"Bill Gates",                      condition:"Good" },
+    { id:132, title:"Reignite 2",                                image:"reignite2.jpg",         author:"Srijan Pal Singh",                condition:"Good" },
+    { id:133, title:"The Mystery of the School on Fire",         image:"schoolfire.jpg",        author:"Ravi Subramanian",                condition:"Good" },
+    { id:134, title:"Swaraj",                                    image:"swaraj.jpg",            author:"Arvind Kejriwal",                 condition:"Good" },
+    { id:135, title:"Mastering HTML, CSS & JavaScript Web Publishing", image:"masterhtml.jpg",  author:"Laura Lemay, Rafe Colburn",       condition:"Good" },
+    { id:136, title:"Lewis Hamilton: My Story",                  image:"hamilton.jpg",          author:"Lewis Hamilton",                  condition:"Good" },
+    { id:137, title:"Emotional Intelligence 2.0",                image:"ei20.jpg",              author:"Travis Bradberry",                condition:"Good" },
+    { id:138, title:"Danny, the Champion of the World",          image:"danny.jpg",             author:"Roald Dahl",                      condition:"Good" },
+    { id:139, title:"The Power of Positive Attitude",            image:"positiveattitude.jpg",  author:"Roger Fritz",                     condition:"Good" },
+    { id:140, title:"The Hope Circuit",                          image:"hopecircuit.jpg",       author:"Martin E.P. Seligman",            condition:"Good" },
+    { id:141, title:"The Let Them Theory",                       image:"letthem.jpg",           author:"Mel Robbins",                     condition:"Good" },
+    { id:142, title:"You Become What You Think",                 image:"youbecome.jpg",         author:"Shubham Kumar",                   condition:"Good" },
+    { id:143, title:"Roger Federer: The Definitive Biography",   image:"federer.jpg",           author:"Chris Bowers",                    condition:"Good" },
+    { id:144, title:"The Free Voice",                            image:"freevoice.jpg",         author:"Ravish Kumar",                    condition:"Good" },
+    { id:145, title:"No Spin",                                   image:"nospin.jpg",            author:"Shane Warne",                     condition:"Good" },
+    { id:146, title:"Moeen",                                     image:"moeen.jpg",             author:"Moeen Ali",                       condition:"Good" },
+    { id:147, title:"Keane: The Autobiography",                  image:"keane.jpg",             author:"Roy Keane",                       condition:"Good" },
+    { id:148, title:"281 and Beyond",                            image:"281beyond.jpg",         author:"VVS Laxman",                      condition:"Good" },
+    { id:149, title:"Being Freddie",                             image:"beingfreddie.jpg",      author:"Andrew Flintoff",                 condition:"Good" },
+    { id:150, title:"Dreams of a Billion",                       image:"dreamsbillion.jpg",     author:"Boria Majumdar & Nalin Mehta",    condition:"Good" },
+    { id:151, title:"Ashes Victory",                             image:"ashesvictory.jpg",      author:"The England Cricket Team",         condition:"Good" },
+    { id:152, title:"Pele: The Autobiography",                   image:"pele.jpg",              author:"Pele",                            condition:"Good" },
+    { id:153, title:"Messi",                                     image:"messi.jpg",             author:"Guillem Balague",                 condition:"Good" },
+    { id:154, title:"The Life You Imagine",                      image:"lifeyouimagine.jpg",    author:"Derek Jeter",                     condition:"Good" },
+    { id:155, title:"Broadside: How We Regained the Ashes",      image:"broadside.jpg",         author:"Stuart Broad",                    condition:"Good" },
+    { id:156, title:"Faf: Through Fire",                         image:"faffire.jpg",           author:"Faf du Plessis",                  condition:"Good" },
+    { id:157, title:"Watching the Wheels",                       image:"watchingwheels.jpg",    author:"Damon Hill",                      condition:"Good" },
+    { id:158, title:"AB: The Autobiography",                     image:"abdevilliers.jpg",      author:"AB de Villiers",                  condition:"Good" },
+    { id:159, title:"Wizards of Spin",                           image:"wizardsspin.jpg",       author:"Anindya Datta",                   condition:"Good" },
+    { id:160, title:"Gerrard: My Autobiography",                 image:"gerrard.jpg",           author:"Steven Gerrard",                  condition:"Good" },
+    { id:161, title:"Crossing the Boundary",                     image:"crossingboundary.jpg",  author:"Kevin Pietersen",                 condition:"Good" },
+    { id:162, title:"Tested",                                    image:"tested.jpeg",           author:"Pat Cummins",                     condition:"Good" },
+    { id:163, title:"Iconic Indians",                            image:"iconicindians.jpg",     author:"Sanjeev Sanyal & Rajesh Singh",   condition:"Good" },
+  ];
+
+  function findBook(id) {
+    return books.find(b => b.id == id) || catalogueBooks.find(b => b.id == id);
+  }
+
+  function updateCartCount() {
+    const total = Object.values(cart).reduce((a,b) => a + b, 0);
+    const countEl = document.getElementById("cart-count");
+    if (total > 0) { countEl.textContent = total; countEl.classList.add("visible"); }
+    else { countEl.textContent = ""; countEl.classList.remove("visible"); }
+  }
+
+  function saveCart() { localStorage.setItem("mr99booksCart", JSON.stringify(cart)); }
+
+  function addToCart(id, btn) {
+    const book = books.find(b => b.id === id);
+    if (!book) return;
+    cart[id] = (cart[id] || 0) + 1;
+    saveCart();
+    updateCartUI();
+    showToast(`<span>${book.title}</span> added to cart`);
+
+    // Button success animation: icon toss → checkmark → revert
+    const iconEl = btn.querySelector('.atc-icon');
+    const textEl = btn.querySelector('.atc-text');
+    btn.classList.remove('clicked'); void btn.offsetWidth;
+    btn.classList.add('clicked', 'added');
+    if (iconEl) iconEl.textContent = '✓';
+    if (textEl) textEl.textContent = 'Added to Cart';
+    setTimeout(() => {
+      btn.classList.remove('clicked', 'added');
+      if (iconEl) iconEl.textContent = '🛒';
+      if (textEl) textEl.textContent = 'Add to Cart — ₹99';
+    }, 1500);
+
+    // Flying cover animation toward the cart icon
+    flyToCart(btn);
+
+    // Cart icon bump + count pop
+    const cartBtn = document.getElementById('cart-btn');
+    const countEl = document.getElementById('cart-count');
+    if (cartBtn) { cartBtn.classList.remove('bump'); void cartBtn.offsetWidth; cartBtn.classList.add('bump'); setTimeout(() => cartBtn.classList.remove('bump'), 600); }
+    if (countEl) { countEl.classList.remove('pop'); void countEl.offsetWidth; countEl.classList.add('pop'); setTimeout(() => countEl.classList.remove('pop'), 450); }
+
+    // 🎉 Confetti burst
+    const rect = btn.getBoundingClientRect();
+    fireConfetti(rect.left + rect.width/2, rect.top + rect.height/2);
+  }
+
+  function flyToCart(btn) {
+    if (reduceMotion) return;
+    const card = btn.closest('.book-card');
+    const img = card ? card.querySelector('.book-cover img') : null;
+    const cartBtn = document.getElementById('cart-btn');
+    if (!img || !cartBtn) return;
+    const imgRect = img.getBoundingClientRect();
+    const cartRect = cartBtn.getBoundingClientRect();
+    if (imgRect.width === 0 || imgRect.height === 0) return;
+
+    const clone = img.cloneNode(true);
+    clone.className = 'fly-clone';
+    clone.style.position = 'fixed';
+    clone.style.left = imgRect.left + 'px';
+    clone.style.top = imgRect.top + 'px';
+    clone.style.width = imgRect.width + 'px';
+    clone.style.height = imgRect.height + 'px';
+    clone.style.margin = '0';
+    clone.style.zIndex = '9999';
+    clone.style.borderRadius = '4px';
+    clone.style.pointerEvents = 'none';
+    clone.style.objectFit = 'cover';
+    clone.style.transition = 'transform 0.65s cubic-bezier(0.55,0,0.85,0.35), opacity 0.65s ease';
+    clone.style.willChange = 'transform, opacity';
+    document.body.appendChild(clone);
+
+    const dx = (cartRect.left + cartRect.width/2) - (imgRect.left + imgRect.width/2);
+    const dy = (cartRect.top + cartRect.height/2) - (imgRect.top + imgRect.height/2);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        clone.style.transform = `translate(${dx}px, ${dy}px) scale(0.12) rotate(20deg)`;
+        clone.style.opacity = '0.25';
+      });
+    });
+
+    setTimeout(() => clone.remove(), 700);
+  }
+
+  function updateCartUI() { updateCartCount(); renderCartDrawer(); }
+
+  function renderCartDrawer() {
+    const itemsEl = document.getElementById('cart-items');
+    const footerEl = document.getElementById('cart-footer');
+    const ids = Object.keys(cart).filter(id => cart[id] > 0);
+    if (ids.length === 0) {
+      itemsEl.innerHTML = `<div class="cart-empty"><div class="empty-icon">📚</div><p>Your cart is empty.<br/>Add some books above!</p></div>`;
+      footerEl.style.display = 'none'; return;
+    }
+    let html = ''; let totalQty = 0;
+    ids.forEach(id => {
+      const book = findBook(id); if (!book) return;
+      const qty = cart[id]; totalQty += qty;
+      html += `
+        <div class="cart-item">
+          <div class="cart-item-cover"><img src="${book.image}" alt="${book.title}"></div>
+          <div class="cart-item-info">
+            <div class="cart-item-title">${book.title}</div>
+            <div class="cart-item-author">${book.author}</div>
+            <div class="cart-item-controls">
+              <span class="qty-num">${qty}</span>
+              <button class="remove-item" onclick="removeItem(${book.id})">🗑</button>
+            </div>
+          </div>
+          <div class="cart-item-price">₹${qty * 99}</div>
+        </div>`;
+    });
+    itemsEl.innerHTML = html;
+    footerEl.style.display = 'block';
+    document.getElementById('cart-total').textContent = `₹${totalQty * 99}`;
+  }
+
+  function changeQty(id, delta) {
+    cart[id] = (cart[id] || 0) + delta;
+    if (cart[id] <= 0) delete cart[id];
+    saveCart(); updateCartUI();
+  }
+
+  function removeItem(id) { delete cart[id]; saveCart(); updateCartUI(); }
+
+  document.getElementById('cart-btn').addEventListener('click', openCart);
+  document.getElementById('close-cart').addEventListener('click', closeCart);
+  document.getElementById('cart-overlay').addEventListener('click', closeCart);
+
+  function openCart() {
+    renderCartDrawer();
+    document.getElementById('cart-overlay').classList.add('open');
+    document.getElementById('cart-drawer').classList.add('open');
+  }
+  function closeCart() {
+    document.getElementById('cart-overlay').classList.remove('open');
+    document.getElementById('cart-drawer').classList.remove('open');
+  }
+
+  function checkout() {
+    const ids = Object.keys(cart).filter(id => cart[id] > 0);
+    if (ids.length === 0) { alert("Your cart is empty!"); return; }
+    let msg = `Hi! I would like to purchase these books.\n\nName:\n\nAddress:\n\nPincode:\n\nPhone Number:\n\n`;
+    ids.forEach(id => {
+      const book = findBook(id); if (!book) return;
+      msg += `Book Title: ${book.title}\nAuthor: ${book.author}\nBook ID: AMS-${String(book.id).padStart(3,'0')}\nPrice: ₹99\nCondition: ${book.condition}\n\n`;
+    });
+    msg += `Please confirm availability and share the shipping-inclusive total.`;
+    if (confirm("Your order will be sent via WhatsApp. Continue?")) {
+      cart = {}; localStorage.removeItem("mr99booksCart");
+      updateCartUI(); closeCart();
+      window.location.href = `https://wa.me/919920291697?text=${encodeURIComponent(msg)}`;
+    }
+  }
+
+  let toastTimeout;
+  function showToast(html) {
+    const toast = document.getElementById('toast');
+    toast.innerHTML = html; toast.classList.add('show');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  updateCartUI();
+  updateCartCount();
+
+  /* ── SEARCH ── */
+  const searchInput = document.getElementById('book-search');
+  const noResults   = document.getElementById('no-results');
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    const cards = document.querySelectorAll('.book-card');
+    let visible = 0;
+    cards.forEach(card => {
+      const title  = card.querySelector('.book-title')?.textContent.toLowerCase() || '';
+      const author = card.querySelector('.book-author')?.textContent.toLowerCase() || '';
+      const match  = !q || title.includes(q) || author.includes(q);
+      card.classList.toggle('hidden', !match);
+      if (match) visible++;
+    });
+    noResults.style.display = visible === 0 ? 'block' : 'none';
+  });
+
+  /* ── HERO STAT COUNTERS ── */
+  function animateCounters() {
+    document.querySelectorAll('.stat-num[data-target]').forEach(el => {
+      const target = parseInt(el.dataset.target, 10);
+      const prefix = el.textContent.replace(/\d+/, '').split(/\d/)[0]; // e.g. ₹
+      let start = 0;
+      const step = () => {
+        start += Math.ceil(target / 40);
+        if (start >= target) { el.textContent = prefix + target; return; }
+        el.textContent = prefix + start;
+        requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  }
+  // Trigger once hero stats are visible
+  const statsObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { animateCounters(); statsObserver.disconnect(); } });
+  }, { threshold: 0.5 });
+  const statsEl = document.querySelector('.hero-stats');
+  if (statsEl) statsObserver.observe(statsEl);
+
+  /* ── CONFETTI BURST ── */
+  function fireConfetti(x, y, accent) {
+    const colors = accent
+      ? [accent, accent, '#C9973A','#D4533A','#5B4E8B','#2E7D5B','#F5EDD6','#fff']
+      : ['#C9973A','#D4533A','#5B4E8B','#2E7D5B','#F5EDD6','#fff'];
+    for (let i = 0; i < 28; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `
+        left:${x}px; top:${y}px;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        width:${Math.random()*8+5}px; height:${Math.random()*8+5}px;
+        border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
+        --fall:${Math.random()*200+80}px;
+        --spin:${(Math.random()-0.5)*720}deg;
+        transform: translate(${(Math.random()-0.5)*120}px, ${(Math.random()-0.5)*60}px);
+        animation-duration:${Math.random()*0.6+0.7}s;
+      `;
+      document.body.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }
+  }
+
+  // Patch addToCart to fire confetti — called from within addToCart directly
+
+  /* ── CURSOR SPARKLES (hero only) ── */
+  const sparkleChars = ['✦','✧','⭒','★','✨','·'];
+  let lastSparkle = 0;
+  document.querySelector('.hero')?.addEventListener('mousemove', e => {
+    if (reduceMotion) return;
+    const now = Date.now();
+    if (now - lastSparkle < 80) return;
+    lastSparkle = now;
+    const el = document.createElement('div');
+    el.className = 'sparkle';
+    el.textContent = sparkleChars[Math.floor(Math.random()*sparkleChars.length)];
+    el.style.cssText = `left:${e.clientX + (Math.random()-0.5)*20}px; top:${e.clientY + (Math.random()-0.5)*20}px; color:${['#C9973A','#f0c864','#fff','#D4533A'][Math.floor(Math.random()*4)]};`;
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  });
+
+  /* ── BOOK PERSONALITY QUIZ ── */
+  // Each option carries a score vector: [Thrill-Seeker, Thoughtful Wanderer, Sports Soul, Big-Picture Thinker]
+  const quizData = [
+    {
+      icon: "🌙",
+      q: "It's Friday night. Where are you?",
+      opts: [
+        { text: "Home with tea & a blanket 🍵", scores: [0,2,0,0] },
+        { text: "Out exploring somewhere new 🗺️", scores: [1,0,0,1] },
+        { text: "Catching a game or match ⚽", scores: [0,0,2,0] },
+        { text: "Deep in a conversation about life 💬", scores: [0,1,0,1] }
+      ]
+    },
+    {
+      icon: "📖",
+      q: "Pick a vibe for your next read:",
+      opts: [
+        { text: "Edge-of-seat suspense 😮", scores: [2,0,0,0] },
+        { text: "Heartwarming & hopeful 🌱", scores: [0,2,0,0] },
+        { text: "Mind-expanding facts 🧠", scores: [0,0,0,2] },
+        { text: "Epic adventures & heroes ⚔️", scores: [1,0,1,0] }
+      ]
+    },
+    {
+      icon: "⏱️",
+      q: "What's your reading pace?",
+      opts: [
+        { text: "Devour it in one sitting 🔥", scores: [2,0,0,0] },
+        { text: "Slow & savoury, one chapter a night 🕯️", scores: [0,1,0,1] },
+        { text: "Dip in and out whenever 📖", scores: [0,0,1,1] },
+        { text: "Audiobook while doing other things 🎧", scores: [1,0,1,0] }
+      ]
+    },
+    {
+      icon: "🌍",
+      q: "If you could teleport into a book world, you'd choose:",
+      opts: [
+        { text: "A noir detective's rain-soaked city 🕵️", scores: [2,0,0,0] },
+        { text: "A cozy cottage retreat for healing 🌿", scores: [0,2,0,0] },
+        { text: "The locker room before the big game 🏆", scores: [0,0,2,0] },
+        { text: "A think-tank shaping the future 🚀", scores: [0,0,0,2] }
+      ]
+    }
+  ];
+
+  const quizResults = [
+    {
+      emoji: '🔥',
+      title: 'The Thrill-Seeker',
+      genre: 'Mystery & Thriller',
+      color: '#D4533A',
+      desc: 'You live for the plot twist. You need a book that keeps your heart racing and your sleep schedule destroyed.',
+      bookTitle: 'Percy Jackson and the Lightning Thief',
+      bookImage: 'percy.jpg',
+      bookLink: 'percy.html'
+    },
+    {
+      emoji: '🌿',
+      title: 'The Thoughtful Wanderer',
+      genre: 'Self-Help & Psychology',
+      color: '#3F8F60',
+      desc: 'You read to grow. Books are your therapist, life coach, and best friend all in one.',
+      bookTitle: 'Learned Optimism',
+      bookImage: 'optimism.jpg',
+      bookLink: 'optimism.html'
+    },
+    {
+      emoji: '🏆',
+      title: 'The Sports Soul',
+      genre: 'Sports Biographies',
+      color: '#C9973A',
+      desc: "You believe sport is life. A great athlete's story hits different.",
+      bookTitle: 'The Three Lives of the Kaiser',
+      bookImage: 'kaiser.webp',
+      bookLink: 'kaiser.html'
+    },
+    {
+      emoji: '🚀',
+      title: 'The Big-Picture Thinker',
+      genre: 'Non-Fiction & Ideas',
+      color: '#7B6BB5',
+      desc: 'You want to understand how the world works.',
+      bookTitle: 'The Almanack of Naval Ravikant',
+      bookImage: 'almanack.jpg',
+      bookLink: 'almanack.html'
+    }
+  ];
+
+  let quizScoreTotals = [0, 0, 0, 0];
+  let quizStep = 0;
+
+  function beginQuiz() {
+    const startEl = document.getElementById('quiz-start');
+    startEl.classList.add('fading');
+    setTimeout(() => {
+      startEl.style.display = 'none';
+      document.getElementById('quiz-progress-wrap').style.display = '';
+      document.getElementById('quiz-slide').style.display = '';
+      startQuiz();
+    }, 260);
+  }
+
+  function startQuiz() {
+    quizScoreTotals = [0, 0, 0, 0];
+    quizStep = 0;
+    const slide = document.getElementById('quiz-slide');
+    slide.classList.remove('exiting', 'entering', 'no-transition');
+    slide.style.display = '';
+    document.getElementById('quiz-progress-wrap').style.display = '';
+    document.getElementById('quiz-result').classList.remove('show');
+    renderQuizStep();
+  }
+
+  function renderQuizStep() {
+    const data = quizData[quizStep];
+    const pct = (quizStep / quizData.length) * 100;
+    document.getElementById('quiz-progress').style.width = `${pct}%`;
+    document.getElementById('quiz-step-label').textContent =
+      `Question ${quizStep + 1} of ${quizData.length}`;
+    document.getElementById('quiz-q-icon').textContent = data.icon;
+    document.getElementById('quiz-q').textContent = data.q;
+
+    const optsEl = document.getElementById('quiz-opts');
+    optsEl.innerHTML = '';
+    optsEl.classList.remove('locked');
+
+    data.opts.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-opt';
+      btn.style.animationDelay = `${i * 55}ms`;
+      btn.textContent = opt.text;
+      btn.onclick = () => selectQuizOption(i, btn, optsEl, data);
+      optsEl.appendChild(btn);
+    });
+  }
+
+  function selectQuizOption(i, btn, optsEl, data) {
+    if (optsEl.classList.contains('locked')) return;
+    optsEl.classList.add('locked');
+    Array.from(optsEl.children).forEach(b => {
+      if (b !== btn) b.classList.add('dimmed');
+    });
+    btn.classList.add('selected');
+
+    const opt = data.opts[i];
+    quizScoreTotals = quizScoreTotals.map((v, idx) => v + (opt.scores[idx] || 0));
+
+    setTimeout(() => {
+      quizStep++;
+      const slide = document.getElementById('quiz-slide');
+
+      if (quizStep >= quizData.length) {
+        document.getElementById('quiz-progress').style.width = '100%';
+        slide.classList.add('exiting');
+        setTimeout(() => {
+          slide.style.display = 'none';
+          showQuizResult();
+        }, 320);
+      } else {
+        slide.classList.add('exiting');
+        setTimeout(() => {
+          renderQuizStep();
+          slide.classList.add('no-transition');
+          slide.classList.remove('exiting');
+          slide.classList.add('entering');
+          void slide.offsetWidth; // force reflow
+          slide.classList.remove('no-transition');
+          requestAnimationFrame(() => slide.classList.remove('entering'));
+        }, 320);
+      }
+    }, 480);
+  }
+
+  function showQuizResult() {
+    const max = Math.max(...quizScoreTotals);
+    const resultIdx = quizScoreTotals.indexOf(max);
+    const r = quizResults[resultIdx];
+    const matchPct = Math.max(55, Math.min(98, Math.round((max / (quizData.length * 2)) * 100)));
+
+    document.getElementById('quiz-progress-wrap').style.display = 'none';
+
+    const res = document.getElementById('quiz-result');
+    res.style.setProperty('--result-color', r.color);
+    document.getElementById('qr-emoji').textContent = r.emoji;
+    document.getElementById('qr-match').textContent = `✨ ${matchPct}% Match`;
+    document.getElementById('qr-title').textContent = r.title;
+    document.getElementById('qr-genre').textContent = '📚 ' + r.genre;
+    document.getElementById('qr-desc').textContent = r.desc;
+
+    document.getElementById('quiz-book-recommendation').innerHTML = `
+      <div class="quiz-book-card">
+        <img src="${r.bookImage}" alt="${r.bookTitle}">
+
+        <div>
+          <h4>📖 Recommended For You</h4>
+
+          <a href="${r.bookLink}">
+            ${r.bookTitle} →
+          </a>
+        </div>
+      </div>
+    `;
+
+    res.classList.remove('show');
+    void res.offsetWidth; // restart entrance + child animations
+    res.classList.add('show');
+
+    const rect = res.getBoundingClientRect();
+    fireConfetti(rect.left + rect.width / 2, rect.top + 40, r.color);
+  }
+
+</script>
+</body>
+</html>

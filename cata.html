@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Details</title>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#F5EDD6;
+    margin:0;
+    padding:40px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:10px;
+}
+
+.book{
+    display:flex;
+    gap:30px;
+    flex-wrap:wrap;
+}
+
+.book img{
+    width:280px;
+    border-radius:8px;
+}
+
+.info{
+    flex:1;
+}
+
+h1{
+    margin-top:0;
+}
+
+.price{
+    font-size:28px;
+    color:#D4533A;
+    font-weight:bold;
+}
+
+.back{
+    display:inline-block;
+    margin-top:20px;
+    text-decoration:none;
+    color:white;
+    background:#1A1B2E;
+    padding:10px 20px;
+    border-radius:4px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="book">
+        <img id="bookImage">
+
+        <div class="info">
+            <h1 id="bookTitle"></h1>
+
+            <p><strong>Author:</strong> <span id="bookAuthor"></span></p>
+
+            <p><strong>Category:</strong> <span id="bookCategory"></span></p>
+
+            <p><strong>Condition:</strong> <span id="bookCondition"></span></p>
+
+            <p class="price">₹99</p>
+
+            <p>
+                Every book on Mr99Books is priced at ₹99.
+                Ships across India.
+            </p>
+
+            <a href="index.html" class="back">← Back to Home</a>
+        </div>
+    </div>
+</div>
+
+<script>
+
+const books = [
+  { id:1, title:"Supernormal", image:"super.jpg", author:"Meg Jay", category:"Psychology", condition:"Good" },
+
+  { id:2, title:"The Almanack of Naval Ravikant", image:"almanack.jpg", author:"Eric Jorgenson", category:"Self Help", condition:"Good" },
+
+  { id:3, title:"Percy Jackson and the Lightning Thief", image:"percy.jpg", author:"Rick Riordan", category:"Fantasy", condition:"Good" },
+
+  { id:5, title:"A Life in Full Flight", image:"flight.jpg", author:"Alan Ruddock", category:"Biography", condition:"Good" },
+
+  { id:8, title:"Learned Optimism", image:"optimism.jpg", author:"Martin E.P. Seligman", category:"Psychology", condition:"Good" },
+
+  { id:11, title:"The Three Lives of the Kaiser", image:"kaiser.webp", author:"Uli Hesse", category:"Football", condition:"Good" },
+
+  { id:12, title:"The Unique Indian Market", image:"indmarket.jpg", author:"Prateek Jain", category:"Business", condition:"Good" },
+
+  { id:15, title:"The Boy Who Runs", image:"boy.jpg", author:"John Brant", category:"Biography", condition:"Good" },
+
+  { id:17, title:"The Monk Who Sold His Ferrari", image:"monk.jpg", author:"Robin Sharma", category:"Self Help", condition:"Good" }
+];
+
+const params = new URLSearchParams(window.location.search);
+const id = Number(params.get("id"));
+
+const book = books.find(b => b.id === id);
+
+if(book){
+
+    document.title = book.title;
+
+    document.getElementById("bookTitle").textContent = book.title;
+    document.getElementById("bookAuthor").textContent = book.author;
+    document.getElementById("bookCategory").textContent = book.category;
+    document.getElementById("bookCondition").textContent = book.condition;
+    document.getElementById("bookImage").src = book.image;
+
+}else{
+
+    document.querySelector(".container").innerHTML = `
+        <h1>Book Not Found</h1>
+        <a href="index.html">Back Home</a>
+    `;
+}
+</script>
+
+</body>
+</html>

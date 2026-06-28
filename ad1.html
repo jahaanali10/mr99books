@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>mr99books — Reel Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --navy:#1A1B2E; --cream:#F5EDD6; --ochre:#C9973A;
+    --rust:#D4533A; --white:#FAFAF7; --grey:#6B6B7B;
+    --navy-2:#0E0F1C; --navy-3:#262A4A;
+    --navy-bg: linear-gradient(155deg, var(--navy-3) 0%, var(--navy) 45%, var(--navy-2) 100%);
+  }
+  .navy-grid::after{
+    content:'';
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(245,237,214,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,237,214,0.05) 1px, transparent 1px);
+    background-size: 28px 28px, 28px 28px;
+    mix-blend-mode:screen;
+    opacity:0.55;
+    pointer-events:none;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{
+    background:#070709;
+    font-family:'DM Sans',sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+    padding:24px 12px;
+  }
+  .note{
+    color:transparent;
+    font-size:0.78rem;
+    text-align:center;
+    max-width:380px;
+    line-height:1.5;
+  }
+  .note b{color:#cfcfd6;}
+  .stage{
+    position:relative;
+    width:min(92vw,414px);
+    aspect-ratio:9/16;
+    overflow:hidden;
+    border-radius:14px;
+    box-shadow:0 30px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(245,237,214,0.04) inset;
+    background:#070709;
+  }
+  .scene{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    padding:9% 9%;
+    animation-duration:20s;
+    animation-timing-function:linear;
+    animation-iteration-count:infinite;
+  }
+
+  /* ---------- SCENE 1 : HOOK ---------- */
+  #s1{ background: var(--rust); }
+  #s1::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 25% 20%, rgba(255,255,255,0.10), transparent 55%);
+  }
+  .s1-line{
+    font-family:'Playfair Display',serif;
+    font-weight:900;
+    color:var(--cream);
+    line-height:1.08;
+    opacity:0;
+    position:relative;
+    z-index:1;
+  }
+  #s1-a{ font-size:clamp(1.9rem,9vw,2.55rem); animation: popIn 20s linear infinite; }
+  #s1-b{ font-size:clamp(1.9rem,9vw,2.55rem); margin-top:14px; color:var(--navy); animation: popInB 20s linear infinite; }
+  #s1-c{ font-family:'DM Sans',sans-serif; font-weight:600; font-size:0.95rem; color:rgba(245,237,214,0.85); margin-top:18px; opacity:0; animation: fadeOnly 20s linear infinite; }
+  #s1{ animation-name: sceneFade1; }
+
+  @keyframes sceneFade1{
+    0%,3%   { opacity:0; }
+    5%      { opacity:1; }
+    20%     { opacity:1; }
+    22%,100%{ opacity:0; }
+  }
+  @keyframes popIn{
+    0%,3%  { opacity:0; transform:translateY(14px) scale(0.92) rotate(-2deg); }
+    6%     { opacity:1; transform:translateY(0) scale(1) rotate(-1deg); }
+    100%   { opacity:1; transform:translateY(0) scale(1) rotate(-1deg); }
+  }
+  @keyframes popInB{
+    0%,10% { opacity:0; transform:translateY(10px) scale(0.92); }
+    13%    { opacity:1; transform:translateY(0) scale(1); }
+    100%   { opacity:1; transform:translateY(0) scale(1); }
+  }
+  @keyframes fadeOnly{
+    0%,15% { opacity:0; }
+    18%    { opacity:1; }
+    100%   { opacity:1; }
+  }
+
+  /* ---------- SCENE 2 : BOOK SHELF ---------- */
+  #s2{ background:var(--navy-bg); animation-name:sceneFade2; padding:0; flex-direction:column; justify-content:center; gap:0; }
+  #s2::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 30%, rgba(201,151,58,0.12), transparent 60%);
+    z-index:0;
+  }
+  @keyframes sceneFade2{
+    0%,22%  { opacity:0; }
+    24%     { opacity:1; }
+    40%     { opacity:1; }
+    42%,100%{ opacity:0; }
+  }
+  .shelf-header{
+    font-family:'Playfair Display',serif;
+    font-weight:900;
+    font-size:clamp(1.3rem,6vw,1.8rem);
+    color:var(--cream);
+    padding: 0 6% 16px;
+    text-align:center;
+    position:relative;
+    z-index:1;
+    opacity:0;
+    animation: shelfHeadIn 20s linear infinite;
+  }
+  .shelf-header span{ color:var(--ochre); }
+  @keyframes shelfHeadIn{
+    0%,23%  { opacity:0; transform:translateY(8px); }
+    25%     { opacity:1; transform:translateY(0); }
+    100%    { opacity:1; }
+  }
+  .shelf-track-wrap{
+    width:100%;
+    overflow:hidden;
+    position:relative;
+    z-index:1;
+  }
+  .shelf-track{
+    display:flex;
+    gap:12px;
+    padding:8px 0;
+    animation: scrollShelf 18s linear infinite;
+    width:max-content;
+  }
+  .book-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    flex-shrink:0;
+  }
+  .book-item img{
+    width:70px;
+    height:105px;
+    object-fit:cover;
+    border-radius:4px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.5);
+    border:1.5px solid rgba(201,151,58,0.3);
+  }
+  .book-label{
+    font-size:0.55rem;
+    color:rgba(245,237,214,0.6);
+    text-align:center;
+    max-width:75px;
+    line-height:1.2;
+    display:none;
+  }
+  @keyframes scrollShelf{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+  .shelf-sub{
+    font-family:'DM Sans',sans-serif;
+    font-weight:700;
+    font-size:clamp(0.75rem,3.5vw,0.95rem);
+    color:var(--ochre);
+    letter-spacing:1px;
+    text-transform:uppercase;
+    margin-top:14px;
+    padding: 0 6%;
+    text-align:center;
+    position:relative;
+    z-index:1;
+    opacity:0;
+    animation:shelfSubIn 20s linear infinite;
+  }
+  @keyframes shelfSubIn{
+    0%,27% { opacity:0; }
+    30%    { opacity:1; }
+    100%   { opacity:1; }
+  }
+
+  /* ---------- SCENE 3 : PRICE STAMP ---------- */
+  #s3{ background:var(--navy-bg); animation-name:sceneFade3; }
+  #s3::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 75% 75%, rgba(201,151,58,0.16), transparent 55%);
+  }
+  @keyframes sceneFade3{
+    0%,42%  { opacity:0; }
+    44%     { opacity:1; }
+    58%     { opacity:1; }
+    60%,100%{ opacity:0; }
+  }
+  .stamp99{
+    font-family:'Playfair Display',serif;
+    font-weight:900;
+    font-size:clamp(4rem,22vw,6.2rem);
+    color:var(--ochre);
+    background:var(--navy-bg);
+    border:5px solid var(--ochre);
+    border-radius:50%;
+    width:62%;
+    aspect-ratio:1/1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    transform:scale(0.6) rotate(-10deg);
+    animation: slam 20s linear infinite;
+    position:relative;
+    z-index:1;
+  }
+  @keyframes slam{
+    0%,43%  { opacity:0; transform:scale(0.5) rotate(-14deg); }
+    44.5%   { opacity:1; transform:scale(1.08) rotate(-4deg); }
+    46%     { transform:scale(1) rotate(-6deg); }
+    100%    { opacity:1; transform:scale(1) rotate(-6deg); }
+  }
+  .s3-sub{
+    font-weight:800;
+    letter-spacing:1px;
+    font-size:clamp(1.05rem,5vw,1.4rem);
+    color:var(--cream);
+    margin-top:22px;
+    opacity:0;
+    position:relative; z-index:1;
+    animation: fadeUp3 20s linear infinite;
+  }
+  .s3-tiny{
+    font-size:0.85rem;
+    color:rgba(245,237,214,0.65);
+    margin-top:10px;
+    opacity:0;
+    position:relative; z-index:1;
+    animation: fadeUp3b 20s linear infinite;
+  }
+  @keyframes fadeUp3{
+    0%,47%  { opacity:0; transform:translateY(8px); }
+    49%     { opacity:1; transform:translateY(0); }
+    100%    { opacity:1; transform:translateY(0); }
+  }
+  @keyframes fadeUp3b{
+    0%,51%  { opacity:0; transform:translateY(8px); }
+    53%     { opacity:1; transform:translateY(0); }
+    100%    { opacity:1; transform:translateY(0); }
+  }
+
+  /* ---------- SCENE 4 : WHY US ---------- */
+  #s4{ background:var(--navy-bg); align-items:flex-start; animation-name:sceneFade4; }
+  #s4::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 15% 10%, rgba(212,83,58,0.14), transparent 50%);
+  }
+  @keyframes sceneFade4{
+    0%,60%  { opacity:0; }
+    62%     { opacity:1; }
+    78%     { opacity:1; }
+    80%,100%{ opacity:0; }
+  }
+  .s4-list{ position:relative; z-index:1; width:100%; }
+  .s4-item{
+    font-family:'DM Sans',sans-serif;
+    font-weight:700;
+    font-size:clamp(1.02rem,5.4vw,1.3rem);
+    color:var(--cream);
+    text-align:left;
+    padding:14px 0;
+    border-bottom:1px solid rgba(245,237,214,0.15);
+    opacity:0;
+    transform:translateX(-22px);
+  }
+  #s4-1{ animation: reveal 20s linear infinite; }
+  #s4-2{ animation: reveal2 20s linear infinite; }
+  #s4-3{ animation: reveal3 20s linear infinite; }
+  #s4-4{ animation: reveal4 20s linear infinite; }
+  @keyframes reveal{ 0%,63%{opacity:0;transform:translateX(-22px);} 65%{opacity:1;transform:translateX(0);} 100%{opacity:1;transform:translateX(0);} }
+  @keyframes reveal2{ 0%,67%{opacity:0;transform:translateX(-22px);} 69%{opacity:1;transform:translateX(0);} 100%{opacity:1;transform:translateX(0);} }
+  @keyframes reveal3{ 0%,71%{opacity:0;transform:translateX(-22px);} 73%{opacity:1;transform:translateX(0);} 100%{opacity:1;transform:translateX(0);} }
+  @keyframes reveal4{ 0%,75%{opacity:0;transform:translateX(-22px);} 77%{opacity:1;transform:translateX(0);} 100%{opacity:1;transform:translateX(0);} }
+
+  /* ---------- SCENE 5 : THE HUMAN BIT ---------- */
+  #s5{ background:var(--cream); animation-name:sceneFade5; }
+  #s5::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(135deg, rgba(201,151,58,0.10), transparent 60%);
+  }
+  @keyframes sceneFade5{
+    0%,80%  { opacity:0; }
+    82%     { opacity:1; }
+    90%     { opacity:1; }
+    92%,100%{ opacity:0; }
+  }
+  .s5-line{
+    font-family:'Playfair Display',serif;
+    font-weight:900;
+    font-style:italic;
+    color:var(--navy);
+    font-size:clamp(1.7rem,8.2vw,2.3rem);
+    line-height:1.15;
+    position:relative; z-index:1;
+    opacity:0;
+    animation: fadeUp5a 20s linear infinite;
+  }
+  .s5-sub{
+    font-family:'DM Sans',sans-serif;
+    font-weight:600;
+    color:var(--grey);
+    font-size:0.95rem;
+    margin-top:16px;
+    position:relative; z-index:1;
+    opacity:0;
+    animation: fadeUp5b 20s linear infinite;
+  }
+  @keyframes fadeUp5a{ 0%,81%{opacity:0;transform:translateY(10px);} 83%{opacity:1;transform:translateY(0);} 100%{opacity:1;transform:translateY(0);} }
+  @keyframes fadeUp5b{ 0%,84%{opacity:0;} 86%{opacity:1;} 100%{opacity:1;} }
+
+  /* ---------- SCENE 6 : CTA ---------- */
+  #s6{ background:var(--navy-bg); animation-name:sceneFade6; overflow:hidden; }
+  #s6::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 30%, rgba(201,151,58,0.18), transparent 55%);
+  }
+  @keyframes sceneFade6{
+    0%,92%  { opacity:0; }
+    94%     { opacity:1; }
+    99%     { opacity:1; }
+    100%    { opacity:0; }
+  }
+  .logo6{
+    font-family:'Playfair Display',serif;
+    font-weight:900;
+    font-size:clamp(2rem,10vw,2.7rem);
+    color:var(--cream);
+    position:relative; z-index:1;
+    opacity:0;
+    animation: pop6 20s linear infinite;
+  }
+  .logo6 span{ color:var(--ochre); }
+  .cta6{
+    font-weight:800;
+    color:var(--ochre);
+    font-size:clamp(1rem,5vw,1.25rem);
+    margin-top:16px;
+    position:relative; z-index:1;
+    opacity:0;
+    animation: pop6b 20s linear infinite;
+  }
+  @keyframes pop6{ 0%,93.5%{opacity:0;transform:scale(0.85);} 95%{opacity:1;transform:scale(1);} 100%{opacity:1;transform:scale(1);} }
+  @keyframes pop6b{ 0%,96%{opacity:0;} 97.5%{opacity:1;} 100%{opacity:1;} }
+
+  .marquee6{
+    position:absolute; bottom:7%; left:0; width:100%;
+    overflow:hidden; white-space:nowrap;
+    border-top:1px solid rgba(245,237,214,0.18);
+    border-bottom:1px solid rgba(245,237,214,0.18);
+    padding:8px 0;
+    opacity:0;
+    animation: pop6c 20s linear infinite;
+  }
+  .marquee6 span{
+    display:inline-block;
+    font-weight:700;
+    font-size:0.72rem;
+    letter-spacing:1.5px;
+    color:var(--cream);
+    text-transform:uppercase;
+    padding:0 14px;
+  }
+  .marquee6-track{ display:inline-block; animation: scrollMarquee 7s linear infinite; }
+  @keyframes pop6c{ 0%,97%{opacity:0;} 98%{opacity:1;} 100%{opacity:1;} }
+  @keyframes scrollMarquee{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+  .confetti{
+    position:absolute; top:-6%;
+    width:8px; height:8px; z-index:2;
+    animation: confettiFall 20s linear infinite;
+  }
+  @keyframes confettiFall{
+    0%,92%  { opacity:0; transform:translateY(0) rotate(0deg); }
+    94%     { opacity:1; }
+    99%     { opacity:1; transform:translateY(560px) rotate(420deg); }
+    100%    { opacity:0; transform:translateY(560px) rotate(420deg); }
+  }
+</style>
+</head>
+<body>
+
+  <div class="stage" id="stage">
+
+    <!-- SCENE 1: HOOK -->
+    <div class="scene" id="s1">
+      <div class="s1-line" id="s1-a">"₹900+ FOR A<br/>PAPERBACK?"</div>
+      <div class="s1-line" id="s1-b">Bold of them.</div>
+      <div class="s1-line" id="s1-c">we charge ₹99. for everything.</div>
+    </div>
+
+    <!-- SCENE 2: BOOK SHELF -->
+ 
+    <div class="scene navy-grid" id="s2">
+      <div class="shelf-header">Our shelves. <span>Your ₹99.</span></div>
+      <div class="shelf-track-wrap">
+        <div class="shelf-track">
+          <div class="book-item">
+      <img src="7habits.jpg" />
+      <span class="book-label">The 7 Habits of Highly Effective People</span>
+    </div><div class="book-item">
+      <img src="almanack.jpg" alt="The Almanack of Naval Ravikant" />
+      <span class="book-label">The Almanack of Naval Ravikant</span>
+    </div><div class="book-item">
+      <img src="abdevilliers.jpg" alt="AB de Villiers – The Autobiography" />
+      <span class="book-label">AB de Villiers – The Autobiography</span>
+    </div><div class="book-item">
+      <img src="callwild.JPG" alt="The Call of the Wild" />
+      <span class="book-label">The Call of the Wild</span>
+    </div><div class="book-item">
+      <img src="hopecircuit.JPG" alt="The Hope Circuit" />
+      <span class="book-label">The Hope Circuit</span>
+    </div><div class="book-item">
+      <img src="crossingboundary.jpg" alt="Crossing the Boundary" />
+      <span class="book-label">Crossing the Boundary</span>
+    </div><div class="book-item">
+      <img src="beingfreddie.jpg" alt="Being Freddie" />
+      <span class="book-label">Being Freddie</span>
+    </div><div class="book-item">
+      <img src="einstein.jpg" alt="Einstein for Everyone" />
+      <span class="book-label">Einstein for Everyone</span>
+    </div><div class="book-item">
+      <img src="flight.jpg" alt="Michael O'Leary – A Life in Full Flight" />
+      <span class="book-label">Michael O'Leary – A Life in Full Flight</span>
+    </div><div class="book-item">
+      <img src="freevoice.JPG" alt="The Free Voice" />
+      <span class="book-label">The Free Voice</span>
+    </div><div class="book-item">
+            <img src="7habits.jpg" />
+      <span class="book-label">The 7 Habits of Highly Effective People</span>
+    </div><div class="book-item">
+      <img src="almanack.jpg" alt="The Almanack of Naval Ravikant" />
+      <span class="book-label">The Almanack of Naval Ravikant</span>
+    </div><div class="book-item">
+      <img src="abdevilliers.jpg" alt="AB de Villiers – The Autobiography" />
+      <span class="book-label">AB de Villiers – The Autobiography</span>
+    </div><div class="book-item">
+      <img src="hamilton.JPG" alt="Lewis Hamilton – My Story" />
+      <span class="book-label">Lewis Hamilton – My Story</span>
+    </div><div class="book-item">
+      <img src="hopecircuit.JPG" alt="The Hope Circuit" />
+      <span class="book-label">The Hope Circuit</span>
+    </div><div class="book-item">
+      <img src="crossingboundary.jpg" alt="Crossing the Boundary" />
+      <span class="book-label">Crossing the Boundary</span>
+    </div><div class="book-item">
+      <img src="beingfreddie.jpg" alt="Being Freddie" />
+      <span class="book-label">Being Freddie</span>
+    </div><div class="book-item">
+      <img src="einstein.jpg" alt="Einstein for Everyone" />
+      <span class="book-label">Einstein for Everyone</span>
+    </div><div class="book-item">
+      <img src="flight.jpg" alt="Michael O'Leary – A Life in Full Flight" />
+      <span class="book-label">Michael O'Leary – A Life in Full Flight</span>
+    </div><div class="book-item">
+      <img src="freevoice.JPG" alt="The Free Voice" />
+      <span class="book-label">The Free Voice</span>
+    </div><div class="book-item">
+    </div>
+        </div>
+      </div>
+      <div class="shelf-sub">Every. Single. One. ₹99</div>
+    </div>
+    <!-- SCENE 3: PRICE STAMP -->
+    <div class="scene navy-grid" id="s3">
+      <div class="stamp99">₹99</div>
+      <div class="s3-sub">EVERY. SINGLE. BOOK.</div>
+      <div class="s3-tiny">(yes, even that one you've been eyeing)</div>
+    </div>
+
+    <!-- SCENE 4: WHY US -->
+    <div class="scene navy-grid" id="s4">
+      <div class="s4-list">
+        <div class="s4-item" id="s4-1">📦&nbsp; wrapped like it's made of glass</div>
+        <div class="s4-item" id="s4-2">⏱️&nbsp; out the door in 48 hours</div>
+        <div class="s4-item" id="s4-3">🇮🇳&nbsp; shipped anywhere in India</div>
+        <div class="s4-item" id="s4-4">💬&nbsp; a human replies. probably the owner.</div>
+      </div>
+    </div>
+
+    <!-- SCENE 5: HUMAN BIT -->
+    <div class="scene" id="s5">
+      <div class="s5-line">One person.<br/>One shelf.<br/>Zero showroom.</div>
+      <div class="s5-sub">pre-loved books, hunting for reader #2</div>
+    </div>
+
+    <!-- SCENE 6: CTA -->
+    <div class="scene navy-grid" id="s6">
+      <div class="logo6">mr<span>99</span>books</div>
+      <div class="cta6">DM "BOOKS" or tap the link →</div>
+      <div class="marquee6">
+        <div class="marquee6-track">
+          <span>EVERY BOOK ₹99</span><span>•</span><span>SECOND HAND, FIRST LOVE</span><span>•</span>
+          <span>EVERY BOOK ₹99</span><span>•</span><span>SECOND HAND, FIRST LOVE</span><span>•</span>
+        </div>
+      </div>
+      <div class="confetti" style="left:12%; background:#C9973A; animation-delay:-0.05s;"></div>
+      <div class="confetti" style="left:22%; background:#D4533A; animation-delay:-0.3s; border-radius:50%;"></div>
+      <div class="confetti" style="left:34%; background:#F5EDD6; animation-delay:-0.15s;"></div>
+      <div class="confetti" style="left:46%; background:#fff; animation-delay:-0.4s; border-radius:50%;"></div>
+      <div class="confetti" style="left:58%; background:#C9973A; animation-delay:-0.22s;"></div>
+      <div class="confetti" style="left:68%; background:#D4533A; animation-delay:-0.08s; border-radius:50%;"></div>
+      <div class="confetti" style="left:78%; background:#F5EDD6; animation-delay:-0.35s;"></div>
+      <div class="confetti" style="left:88%; background:#fff; animation-delay:-0.18s; border-radius:50%;"></div>
+    </div>
+
+  </div>
+
+
+</body>
+</html>
