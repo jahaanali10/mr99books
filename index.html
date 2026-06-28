@@ -58,6 +58,31 @@
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
 
+    /* ── LOW-END DEVICE TIER ── */
+    /* Applied via JS when hardwareConcurrency ≤ 4 + deviceMemory ≤ 2GB, or slow network */
+    .low-end *,
+    .low-end *::before,
+    .low-end *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.15ms !important;
+    }
+    /* Keep the marquee — it's GPU-composited and cheap */
+    .low-end .marquee-inner {
+      animation-duration: 22s !important;
+      animation-play-state: running !important;
+    }
+    /* Kill particles — most expensive continuous animation */
+    .low-end .particle { display: none !important; }
+    /* Kill gold sweep on hero headline — freeze at static gold */
+    .low-end .hero h1 em {
+      background-position: 0% 50% !important;
+      animation: none !important;
+    }
+    /* Kill pulsing cart badge — keep it visible, just static */
+    .low-end #cart-count { animation: none !important; }
+    /* Keep hover states functional but instant */
+    .low-end .book-card:hover { transform: translateY(-4px) !important; }
+
     /* ── NAV ── */
     nav {
       background: var(--navy);
@@ -1701,7 +1726,19 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Detect low-end devices by CPU core count, RAM, and network speed
+  const cores = navigator.hardwareConcurrency || 4;
+  const ram   = navigator.deviceMemory || 4; // Chrome/Edge only; Firefox/Safari return undefined → defaults to 4
+  const slowNetwork = navigator.connection && ['slow-2g','2g'].includes(navigator.connection.effectiveType);
+  const lowEndDevice = (cores <= 4 && ram <= 2) || slowNetwork;
+
+  // reduceMotion = user OS preference OR device can't handle it
+  const reduceMotion = prefersReducedMotion || lowEndDevice;
+
+  // Add CSS class so stylesheet animations also respond
+  if (lowEndDevice) document.documentElement.classList.add('low-end');
 
   /* ── SCROLL PROGRESS ── */
   const scrollProgress = document.getElementById('scroll-progress');
@@ -2121,6 +2158,7 @@ document.querySelector(".logo").onclick=()=>{
 
   /* ── CONFETTI BURST ── */
   function fireConfetti(x, y, accent) {
+    if (reduceMotion) return;
     const colors = accent
       ? [accent, accent, '#C9973A','#D4533A','#5B4E8B','#2E7D5B','#F5EDD6','#fff']
       : ['#C9973A','#D4533A','#5B4E8B','#2E7D5B','#F5EDD6','#fff'];
