@@ -71,6 +71,10 @@
       animation-duration: 22s !important;
       animation-play-state: running !important;
     }
+    .low-end .notice-bar-inner {
+      animation-duration: 14s !important;
+      animation-play-state: running !important;
+    }
     /* Kill particles — most expensive continuous animation */
     .low-end .particle { display: none !important; }
     /* Kill gold sweep on hero headline — freeze at static gold */
@@ -471,6 +475,31 @@
       from { opacity: 0; transform: translateY(40px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+
+    /* ── TOP NOTICE BAR ── */
+    .notice-bar {
+      background: var(--navy);
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 6px 0;
+      cursor: default;
+      border-bottom: 1px solid rgba(201,151,58,0.35);
+      line-height: 0;
+      font-size: 0;
+    }
+    .notice-bar-inner {
+      display: inline-block;
+      animation: noticeSlide 14s linear infinite;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--cream);
+      line-height: 1.4;
+      vertical-align: top;
+    }
+    .notice-bar-inner span { margin: 0 20px; }
+    .notice-bar:hover .notice-bar-inner { animation-play-state: paused; }
+    @keyframes noticeSlide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
     /* ── MARQUEE ── */
     .marquee-strip {
@@ -1491,9 +1520,21 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=1342575361360779&ev=PageView&noscript=1"
 /></noscript>
-<!-- End Meta Pixel Code --></head>>
+<!-- End Meta Pixel Code --></head>
 <body>
 <div class="scroll-progress" id="scroll-progress"></div>
+
+<!-- TOP NOTICE -->
+<div class="notice-bar">
+  <div class="notice-bar-inner">
+    <span>📦 Shipping charges will be added to your final total at checkout</span>
+    <span>•</span>
+    <span>📦 Shipping charges will be added to your final total at checkout</span>
+    <span>•</span>
+    <span>📦 Shipping charges will be added to your final total at checkout</span>
+    <span>•</span>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav>
